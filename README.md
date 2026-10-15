@@ -34,7 +34,7 @@ git reset --hard upstream/main
 git checkout main
 git pull upstream main      # or: git fetch upstream && git reset --hard upstream/main
 git checkout -b add-<NAME>-<ID>-<YourGithubUsername>
-# Example: git checkout -b add-Swarnadip-12345-Swarnadip-Kar
+# Example: git checkout -b add-Swarnadip-12342210-Swarnadip-Kar
 ```
 
 Rules:
@@ -47,16 +47,16 @@ Rules:
 
 ```bash
 cp -r students/_template students/<NAME>-<ID>-<YourGithubUsername>
-# Example: cp -r students/_template students/Swarnadip-12345-Swarnadip-Kar
+# Example: cp -r students/_template students/Swarnadip-12342210-Swarnadip-Kar
 ```
 
 Rules:
 - Folder must be exactly `<NAME>-<ID>-<GithubUsername>` — keep your original case (no forced lowercase).
 - NAME = your real name: letters/numbers/`_`, start with letter, NO hyphens. ID = your roll no. / chosen ID: letters/numbers, NO hyphens (keeps the 3-part split unambiguous). Last part = YOUR GitHub username (may contain hyphens).
-- Example: `Swarnadip-12345-Swarnadip-Kar` → NAME=`Swarnadip`, ID=`12345`, GithubUsername=`Swarnadip-Kar`. Keep ID stable forever.
+- Example: `Swarnadip-12342210-Swarnadip-Kar` → NAME=`Swarnadip`, ID=`12342210`, GithubUsername=`Swarnadip-Kar`. Keep ID stable forever.
 - Inside your folder: `index.html` is **required** (put your real name in `<h1>`/`<title>`). You may add `style.css` and images (total < 500 KB). Do NOT touch anyone else's folder — the bot checks the username part against YOUR login.
 
-Edit `students/<NAME>-<ID>-<GithubUsername>/index.html` — make it beautiful. See `students/_template/index.html` and `students/Swarnadip-12345-Swarnadip-Kar/index.html`. Your page is listed on the main hub (`index.html`) automatically from `students.json`.
+Edit `students/<NAME>-<ID>-<GithubUsername>/index.html` — make it beautiful. See `students/_template/index.html` and `students/Swarnadip-12342210-Swarnadip-Kar/index.html`. Your page is listed on the main hub (`index.html`) automatically from `students.json`.
 
 ### Step 3 — add ONE line to `students.json`
 
@@ -66,9 +66,9 @@ Append exactly one JSON object (keep alphabetical order if you can, trailing com
 [
   {
     "name": "Swarnadip",
-    "id": "12345",
-    "folder": "Swarnadip-12345-Swarnadip-Kar",
-    "page": "students/Swarnadip-12345-Swarnadip-Kar/index.html",
+    "id": "12342210",
+    "folder": "Swarnadip-12342210-Swarnadip-Kar",
+    "page": "students/Swarnadip-12342210-Swarnadip-Kar/index.html",
     "github": "Swarnadip-Kar"
   }
 ]
@@ -96,7 +96,7 @@ PR title format (required for auto-merge):
 
 ```
 add: <NAME>-<ID>-<GithubUsername>
-# Example: add: Swarnadip-12345-Swarnadip-Kar
+# Example: add: Swarnadip-12342210-Swarnadip-Kar
 ```
 
 PR body: write 1 line — your name + what your page has.
@@ -172,7 +172,7 @@ algorythm-iit-bhilai/
   sessions.json         ← slide-deck catalogue
   students/
     _template/index.html
-    Swarnadip-12345-Swarnadip-Kar/index.html   ← example
+    Swarnadip-12342210-Swarnadip-Kar/index.html   ← example
     <NAME>-<ID>-<GithubUsername>/index.html  ← yours (username MUST be yours)
   sessions/
     session-01-intro-explore/index.html (+ pdf/md/png)

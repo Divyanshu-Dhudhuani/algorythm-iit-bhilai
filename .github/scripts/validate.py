@@ -2,7 +2,7 @@
 """Validate student PRs: only YOUR OWN folder + at most one students.json entry.
 
 Folder format: <NAME>-<ID>-<GithubUsername>  (keep original case)
-  Example: Swarnadip-12345-Swarnadip-Kar
+  Example: Swarnadip-12342210-Swarnadip-Kar
   - NAME: your real name, letters/numbers/_, starts with letter (no hyphens)
   - ID: your roll no. / chosen ID, letters/numbers (no hyphens)
   - GithubUsername: MUST equal the PR author's GitHub username (case-insensitive)
@@ -113,7 +113,7 @@ def main():
             errors.append(fail(
                 f"Bad folder name `{fo}`. Must be `<NAME>-<ID>-<GithubUsername>` "
                 "(NAME and ID contain no hyphens; the username is everything after the 2nd `-`). "
-                "Example: `Swarnadip-12345-Swarnadip-Kar`."))
+                "Example: `Swarnadip-12342210-Swarnadip-Kar`."))
             continue
         name_p, id_p, user_p = parts
         if not NAME_RE.match(name_p):

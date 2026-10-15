@@ -52,14 +52,14 @@ jobs:
           # 3. branch naming: add-/update-<NAME>-<ID>-<GithubUsername>, folder keeps original case
           if ! echo "$HEAD_REF" | grep -Eq '^(add|update)-[A-Za-z][A-Za-z0-9_]*-[A-Za-z0-9]+-[A-Za-z0-9]([A-Za-z0-9-]{0,37}[A-Za-z0-9])?$'; then
             MSG="❌ **Bad branch name \`$HEAD_REF\`.**
-          Use \`add-<NAME>-<ID>-<YourGithubUsername>\` for new pages or \`update-<NAME>-<ID>-<YourGithubUsername>\` for edits. Example: \`add-Swarnadip-12345-Swarnadip-Kar\`.
+          Use \`add-<NAME>-<ID>-<YourGithubUsername>\` for new pages or \`update-<NAME>-<ID>-<YourGithubUsername>\` for edits. Example: \`add-Swarnadip-12342210-Swarnadip-Kar\`.
           Your folder must be \`students/<NAME>-<ID>-<GithubUsername>/\` with the SAME case."
             echo "$MSG"; gh pr comment "$PR_NUMBER" --repo "$BASE_REPO" --body "$MSG"
             exit 1
           fi
           if ! echo "$PR_TITLE" | grep -Eq '^(add|update): *[A-Za-z][A-Za-z0-9_]*-[A-Za-z0-9]+-[A-Za-z0-9]([A-Za-z0-9-]{0,37}[A-Za-z0-9])?$'; then
             MSG="❌ **Bad PR title \`$PR_TITLE\`.**
-          Title must be \`add: <NAME>-<ID>-<GithubUsername>\` (or \`update: …\`). Example: \`add: Swarnadip-12345-Swarnadip-Kar\`."
+          Title must be \`add: <NAME>-<ID>-<GithubUsername>\` (or \`update: …\`). Example: \`add: Swarnadip-12342210-Swarnadip-Kar\`."
             echo "$MSG"; gh pr comment "$PR_NUMBER" --repo "$BASE_REPO" --body "$MSG"
             exit 1
           fi
@@ -98,7 +98,7 @@ jobs:
           **Resolve locally first, then push** (see README §2 — do NOT just click Resolve on github.com):
           \`\`\`bash
           git fetch upstream
-          git checkout <your-branch>   # e.g. add-Swarnadip-12345-Swarnadip-Kar
+          git checkout <your-branch>   # e.g. add-Swarnadip-12342210-Swarnadip-Kar
           git rebase upstream/main     # or: git merge upstream/main
           # open students.json → keep BOTH entries (yours + theirs), delete <<<<<<< ======= >>>>>>> markers
           python3 -c \"import json; json.load(open('students.json')); print('JSON OK')\"
