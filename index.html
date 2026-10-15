@@ -46,34 +46,43 @@ h1{font-family:var(--font-display);font-size:clamp(26px,4.4vw,40px);letter-spaci
 .mission{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px}
 .pill{font-family:var(--font-mono);font-size:12px;letter-spacing:.08em;border:1px solid var(--border);background:var(--bg);border-radius:999px;padding:5px 12px}
 .pill b{color:var(--fg)}
-/* sections */
-section{margin-top:34px}
-section>h2{font-family:var(--font-display);font-size:22px;letter-spacing:-.01em;margin-bottom:2px}
-.hint{color:var(--muted);font-size:14px;margin-bottom:6px}
+/* ---- design system: sections, cards, chips ---- */
+section{margin-top:40px}
+.sec-head{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;margin-bottom:2px}
+.sec-num{font-family:var(--font-mono);font-size:12px;letter-spacing:.18em;background:var(--fg);color:var(--bg);border-radius:999px;padding:4px 12px}
+section>h2{font-family:var(--font-display);font-size:22px;letter-spacing:-.01em}
+.hint{color:var(--muted);font-size:14px;margin:6px 0 4px;max-width:78ch}
 .hint code,.howto code{font-family:var(--font-mono);font-size:12.5px;background:var(--surface);padding:2px 7px;border-radius:6px;border:1px solid var(--border)}
-.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:14px;margin-top:14px}
-.card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:18px}
-.card h3{font-family:var(--font-display);font-size:18px;letter-spacing:-.01em;margin-bottom:4px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(310px,1fr));gap:16px;margin-top:16px}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:20px;transition:transform .15s ease,box-shadow .15s ease}
+.card:hover{transform:translateY(-2px);box-shadow:0 12px 28px -18px oklch(22% 0.02 240 / .45)}
+.card h3{font-family:var(--font-display);font-size:18px;letter-spacing:-.01em;margin:8px 0 4px}
+.chiprow{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.chip{font-family:var(--font-mono);font-size:11.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);border:1px solid var(--border);background:var(--bg);border-radius:999px;padding:4px 10px}
+.chip.solid{background:var(--accent);border-color:var(--accent);color:var(--accent-ink);font-weight:700}
 .meta{color:var(--muted);font-size:12.5px;font-family:var(--font-mono);letter-spacing:.06em;margin-bottom:8px}
-.desc{font-size:14.5px;margin-bottom:12px}
+.desc{font-size:14.5px;margin-bottom:14px;color:var(--fg)}
 .links{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
-.links a{font-size:13.5px;font-weight:600;padding:7px 14px;border-radius:999px;border:1px solid var(--border);background:var(--bg);color:var(--fg);text-decoration:none;font-family:var(--font-display)}
+.links a{font-size:13.5px;font-weight:600;padding:8px 16px;border-radius:999px;border:1px solid var(--border);background:var(--bg);color:var(--fg);text-decoration:none;font-family:var(--font-display)}
 .links a.open{background:var(--fg);border-color:var(--fg);color:var(--bg)}
+.links a.ghost{background:var(--surface)}
 .links a:hover{filter:brightness(.96)}
-.extras{margin-top:10px;font-size:13px;color:var(--muted)}
+.extras{margin-top:12px;padding-top:10px;border-top:1px dashed var(--border);font-size:13px;color:var(--muted)}
 .extras a{color:var(--link);text-decoration:none;margin-right:12px}
 .extras a:hover{text-decoration:underline}
 /* students */
-.toolbar{display:flex;gap:10px;margin:12px 0;flex-wrap:wrap}
-input[type=search]{flex:1;min-width:220px;padding:10px 14px;border-radius:10px;border:1px solid var(--border);background:var(--surface);color:var(--fg);font-size:14px;font-family:var(--font-body)}
-.count{color:var(--muted);font-size:12.5px;font-family:var(--font-mono);align-self:center;letter-spacing:.08em}
-.s-top{display:flex;gap:12px;align-items:center;margin-bottom:10px}
-.s-top img.avatar{width:48px;height:48px;border-radius:50%;border:1px solid var(--border);background:var(--bg);flex:none}
-.avatar-fallback{width:48px;height:48px;border-radius:50%;background:var(--fg);color:var(--bg);display:grid;place-items:center;font-weight:800;font-size:19px;font-family:var(--font-display);flex:none}
-.s-name{font-weight:700;font-family:var(--font-display)}
-.s-id{font-family:var(--font-mono);font-size:12px;color:var(--muted)}
-.s-github{font-family:var(--font-mono);font-size:12px;color:var(--muted)}
-.howto{background:var(--surface);border:1px dashed var(--border);border-radius:16px;padding:16px;margin-top:14px;font-size:14px}
+.toolbar{display:flex;gap:10px;margin:14px 0 4px;flex-wrap:wrap}
+input[type=search]{flex:1;min-width:220px;padding:11px 16px;border-radius:999px;border:1px solid var(--border);background:var(--surface);color:var(--fg);font-size:14px;font-family:var(--font-body);outline:none}
+input[type=search]:focus{border-color:var(--accent);box-shadow:0 0 0 3px oklch(58% 0.16 145 / .18)}
+.count{color:var(--muted);font-size:12.5px;font-family:var(--font-mono);align-self:center;letter-spacing:.08em;background:var(--surface);border:1px solid var(--border);border-radius:999px;padding:5px 12px}
+.s-top{display:flex;gap:14px;align-items:center;margin-bottom:12px}
+.s-top img.avatar{width:56px;height:56px;border-radius:50%;border:2px solid var(--border);background:var(--bg);flex:none}
+.avatar-fallback{width:56px;height:56px;border-radius:50%;background:var(--fg);color:var(--bg);display:grid;place-items:center;font-weight:800;font-size:21px;font-family:var(--font-display);flex:none}
+.s-name{font-weight:700;font-family:var(--font-display);font-size:16px}
+.s-id{font-family:var(--font-mono);font-size:11.5px;color:var(--muted);margin-top:2px}
+.s-github{font-family:var(--font-mono);font-size:12px;color:var(--link);margin-top:2px}
+.howto{background:var(--surface);border:1px dashed var(--border);border-radius:16px;padding:18px;margin-top:16px;font-size:14px}
+.howto ol{margin:8px 0 8px 20px;display:grid;gap:4px}
 footer{margin-top:48px;color:var(--muted);font-size:13px;border-top:1px solid var(--border);padding-top:16px;font-family:var(--font-mono);font-size:12px;letter-spacing:.04em}
 footer a{color:var(--link)}
 .error{background:#fdecec;border:1px solid #f3b8b8;padding:12px;border-radius:10px;font-size:14px}
@@ -102,7 +111,7 @@ footer a{color:var(--link)}
     <div>
       <div class="kicker">Maintainer</div>
       <h2>Swarnadip — DUGC Representative, CSE, IIT Bhilai</h2>
-      <div class="role">Runs ALGORYTHM · your senior, not your lecturer</div>
+      <div class="role">Runs ALGORYTHM sessions · all parts, not just git</div>
       <p><b>Why ALGORYTHM?</b> Seniors and juniors exploring tech together — weekly sessions, small homework, CTFs, showcases. Mission: <b>increase tech culture</b>. No session makes you a master; each one is <b>map + proof + first step + game</b>.</p>
       <p>Why bother? <b>Leverage</b> — build once, used by thousands (our attendance app, tapped within days). <b>Optionality</b> — GSoC, internships, research, startups: proof beats marks. <b>Fun</b> — your phone becomes a MIDI looper for ₹0. And the rule for the AI era: <b>use AI — but be good enough to catch it when it's wrong</b>.</p>
       <p>So: come with your laptop, leave with a page on this hub. Best bio pages go on stage next session. 🔥</p>
@@ -115,15 +124,13 @@ footer a{color:var(--link)}
   </div>
 
   <section id="sessions-sec">
-    <div class="kicker">01 / Talk + hands-on</div>
-    <h2>📚 Session slide decks</h2>
-    <p class="hint">HTML decks open directly — no download needed. New sessions get appended to <code>sessions.json</code>.</p>
+    <div class="sec-head"><span class="sec-num">01</span><h2>Session slide decks</h2></div>
+    <p class="hint">Every part of the series lives here — git, agents, CTFs, demos and more. HTML decks open directly, no download needed. New sessions get appended to <code>sessions.json</code>.</p>
     <div class="grid" id="sessions"></div>
   </section>
 
   <section id="students-sec">
-    <div class="kicker">02 / Proof · your turn</div>
-    <h2>🧑‍💻 Student bio pages</h2>
+    <div class="sec-head"><span class="sec-num">02</span><h2>Student bio pages</h2></div>
     <p class="hint">Each student owns <code>students/&lt;NAME&gt;-&lt;ID&gt;-&lt;GithubUsername&gt;/index.html</code> + one line in <code>students.json</code>. To get featured, open a PR (see README).</p>
     <div class="toolbar">
       <input type="search" id="q" placeholder="Search name, ID or GitHub user… (e.g. Swarnadip)" />
@@ -131,9 +138,13 @@ footer a{color:var(--link)}
     </div>
     <div class="grid" id="students"></div>
     <div class="howto">
-      <b>Add your page in 4 steps:</b>
-      1) Fork repo → 2) copy <code>students/_template/</code> to <code>students/YourName-YourID-YourGithubUsername/</code> →
-      3) edit your <code>index.html</code> → 4) add one line to <code>students.json</code> → open PR from your own branch.
+      <b>Get featured in 4 steps:</b>
+      <ol>
+        <li>Fork the repo</li>
+        <li>Copy <code>students/_template/</code> to <code>students/YourName-YourID-YourGithubUsername/</code></li>
+        <li>Edit your <code>index.html</code></li>
+        <li>Add one line to <code>students.json</code> and open a PR from your own branch</li>
+      </ol>
       Full steps in <a href="README.md">README</a>. PRs that follow the format are auto-merged 🤖.
     </div>
   </section>
@@ -159,12 +170,14 @@ async function main(){
     // there is no difference between the old "Main deck" and "Open deck" buttons; deduped.
     const sWrap = document.getElementById("sessions");
     sWrap.innerHTML = "";
-    sessions.forEach(s=>{
+    sessions.forEach((s,i)=>{
       const extras = (s.files||[]).filter(f=>f.href!==s.deck)
         .map(f=>`<a href="${f.href}">${escapeHtml(f.label)}</a>`).join("");
+      const num = "S"+String(i+1).padStart(2,"0");
       sWrap.appendChild(el(`<div class="card">
+        <div class="chiprow"><span class="chip solid">${num}</span><span class="chip">${escapeHtml(s.date||"")}</span></div>
         <h3>${escapeHtml(s.title)}</h3>
-        <div class="meta">${escapeHtml(s.date||"")} · ${escapeHtml(s.id)}</div>
+        <div class="meta">${escapeHtml(s.id)}</div>
         <div class="desc">${escapeHtml(s.description||"")}</div>
         <div class="links"><a class="open" href="${s.deck}">▶ Open deck</a></div>
         ${extras?`<div class="extras">${extras}</div>`:""}
@@ -188,7 +201,7 @@ async function main(){
             <div><div class="s-name">${escapeHtml(s.name)}</div><div class="s-id">${escapeHtml(s.folder)}</div><div class="s-github">@${escapeHtml(s.github||"")}</div></div>
           </div>
           <div class="links"><a class="open" href="${s.page}">Open bio page →</a>
-          ${s.github?`<a href="https://github.com/${encodeURIComponent(s.github)}">GitHub</a>`:""}</div>
+          ${s.github?`<a class="ghost" href="https://github.com/${encodeURIComponent(s.github)}">@${escapeHtml(s.github)}</a>`:""}</div>
         </div>`);
         const img = card.querySelector("img.avatar");
         img.addEventListener("error", ()=>{
