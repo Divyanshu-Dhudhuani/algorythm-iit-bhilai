@@ -1,0 +1,433 @@
+<!doctype html>
+<html lang="en" data-od-deck-protocol="1">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>ALGORYTHM Session 2 — Git + Your Own Agent | IIT Bhilai</title>
+<style>
+:root{
+--bg: oklch(98% 0.005 250);
+--surface: oklch(100% 0 0);
+--fg: oklch(22% 0.02 240);
+--muted: oklch(50% 0.018 240);
+--border: oklch(90% 0.008 240);
+--accent: oklch(58% 0.16 145);
+--font-display: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', system-ui, sans-serif;
+--font-body: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', system-ui, sans-serif;
+--font-mono: 'JetBrains Mono', 'IBM Plex Mono', ui-monospace, Menlo, monospace;
+--shell: #08090d;
+--darkbg: oklch(20% 0.02 250);
+--darkfg: oklch(96% 0.005 250);
+--darkmuted: oklch(72% 0.02 250);
+--danger: oklch(60% 0.18 25);
+--warn: oklch(65% 0.14 70);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{width:100%;height:100%;overflow:hidden;background:var(--shell);color:var(--fg);font:18px/1.5 -apple-system,system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+.deck-shell{position:fixed;inset:0;overflow:hidden}
+.deck-stage{width:1920px;height:1080px;background:var(--bg);position:relative;transform-origin:top left;box-shadow:0 30px 80px rgba(0,0,0,.35)}
+.slide{position:absolute;inset:0;overflow:hidden}
+.slide:not(.active){display:none!important}
+:where(.slide.active){display:flex;flex-direction:column}
+.deck-counter{position:fixed;bottom:22px;left:50%;transform:translateX(-50%);display:none;align-items:center;gap:4px;background:rgba(10,14,26,.92);padding:6px;border-radius:999px;border:1px solid rgba(255,255,255,.08);color:#fff;font:12px/1 ui-monospace,Menlo,monospace;letter-spacing:.18em;z-index:1000}
+.deck-counter button{width:36px;height:36px;background:transparent;color:#fff;border:0;border-radius:50%;font-size:18px;cursor:pointer;display:grid;place-items:center}
+.deck-counter .deck-count{padding:0 14px;letter-spacing:.22em}
+.deck-counter .deck-count .total{color:rgba(255,255,255,.5)}
+.deck-hint{position:fixed;bottom:26px;right:28px;color:rgba(255,255,255,.4);font:11px/1 ui-monospace,monospace;letter-spacing:.2em;text-transform:uppercase;z-index:999;pointer-events:none;display:none}
+@media print{@page{size:1920px 1080px;margin:0}html,body{width:1920px!important;height:auto!important;overflow:visible!important;background:#fff!important}.deck-shell{position:static!important;display:block!important;inset:auto!important}.deck-stage{width:1920px!important;height:auto!important;transform:none!important;box-shadow:none!important;position:static!important}.slide{display:flex!important;position:relative!important;inset:auto!important;width:1920px!important;height:1080px!important;page-break-after:always;break-after:page}.slide:last-child{page-break-after:auto;break-after:auto}.deck-counter,.deck-hint{display:none!important}}
+</style>
+<style>
+.canvas{width:1920px;height:1080px;padding:90px 120px;display:flex;flex-direction:column;justify-content:center;position:relative;font-family:var(--font-body)}
+.kicker{font-family:var(--font-mono);font-size:22px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin-bottom:24px}
+.kicker.dk{color:oklch(78% 0.16 155)}
+h1.hero{font-family:var(--font-display);font-size:128px;line-height:1.05;letter-spacing:-.02em;font-weight:700}
+h2.t{font-family:var(--font-display);font-size:70px;line-height:1.1;letter-spacing:-.02em;font-weight:700}
+h2.t.sm{font-size:60px}
+.sub{font-size:31px;line-height:1.45;color:var(--muted);max-width:58ch;margin-top:24px}
+.slide.dark{background:var(--darkbg);color:var(--darkfg)}
+.slide.dark .canvas{color:var(--darkfg)}
+.slide.dark .sub{color:var(--darkmuted)}
+.pill{display:inline-flex;align-items:center;gap:12px;font-family:var(--font-mono);font-size:22px;letter-spacing:.1em;text-transform:uppercase;border:1px solid var(--border);border-radius:999px;padding:12px 28px;background:var(--surface);color:var(--muted);margin-bottom:28px}
+.slide.dark .pill{background:rgba(255,255,255,.06);border-color:rgba(255,255,255,.14);color:var(--darkmuted)}
+.live{display:inline-flex;align-items:center;gap:10px;font-family:var(--font-mono);font-size:20px;letter-spacing:.12em;text-transform:uppercase;background:oklch(60% 0.18 25);color:#fff;border-radius:999px;padding:10px 24px;margin-bottom:24px}
+.live::before{content:"";width:12px;height:12px;border-radius:50%;background:#fff;animation:blink 1.2s infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.25}}
+.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:36px;margin-top:52px}
+.grid4{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:28px;margin-top:48px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:36px;margin-top:48px}
+.card{background:var(--surface);border:1.5px solid var(--border);border-radius:24px;padding:40px 38px}
+.slide.dark .card{background:rgba(255,255,255,.05);border-color:rgba(255,255,255,.12)}
+.card h3{font-size:33px;letter-spacing:-.01em;margin-bottom:12px}
+.card p{font-size:25px;line-height:1.5;color:var(--muted)}
+.slide.dark .card p{color:var(--darkmuted)}
+.card .num{font-family:var(--font-mono);font-size:23px;color:var(--accent);letter-spacing:.1em;margin-bottom:14px;display:block}
+.card code{font-family:var(--font-mono);background:oklch(94% 0.01 250);padding:3px 12px;border-radius:8px;font-size:22px;color:var(--fg)}
+.slide.dark .card code{background:rgba(255,255,255,.1);color:var(--darkfg)}
+.code{background:#0d1117;color:#e6edf3;border-radius:20px;padding:36px 44px;font-family:var(--font-mono);font-size:28px;line-height:1.7;margin-top:36px}
+.code .c{color:#8b949e}.code .g{color:#7ee787}.code .y{color:#e3b341}
+.foot{position:absolute;bottom:52px;left:120px;right:120px;display:flex;justify-content:space-between;font-family:var(--font-mono);font-size:20px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.slide.dark .foot{color:var(--darkmuted)}
+.split{display:grid;grid-template-columns:1.1fr .9fr;gap:60px;margin-top:40px;align-items:start}
+ul.ticks{list-style:none;margin-top:32px;display:flex;flex-direction:column;gap:20px}
+ul.ticks li{font-size:30px;line-height:1.45;padding-left:56px;position:relative}
+ul.ticks li::before{content:"▸";position:absolute;left:0;color:var(--accent);font-weight:700}
+ul.ticks li code, p code, .sub code{font-family:var(--font-mono);background:oklch(94% 0.01 250);padding:3px 12px;border-radius:8px;font-size:24px;color:var(--fg)}
+.slide.dark ul.ticks li code{color:var(--darkfg);background:rgba(255,255,255,.1)}
+a{color:var(--accent)}
+.note{font-family:var(--font-mono);font-size:20px;color:var(--muted);letter-spacing:.04em}
+.slide.dark .note{color:var(--darkmuted)}
+.step{display:flex;gap:28px;align-items:flex-start;background:var(--surface);border:1.5px solid var(--border);border-radius:18px;padding:26px 32px}
+.step b{font-family:var(--font-mono);font-size:26px;color:var(--surface);background:var(--accent);border-radius:12px;min-width:56px;height:56px;display:grid;place-items:center}
+.step p{font-size:27px;line-height:1.45}.step code{font-family:var(--font-mono);background:oklch(94% 0.01 250);padding:4px 12px;border-radius:8px;font-size:24px}
+.cta{display:inline-flex;margin-top:40px;background:var(--accent);color:#fff;font-size:30px;font-weight:600;padding:22px 54px;border-radius:999px;letter-spacing:.02em;text-decoration:none}
+.layers{display:grid;grid-template-columns:1fr auto 1fr auto 1fr auto 1fr;gap:0;margin-top:48px;align-items:stretch}
+.layer{background:var(--surface);border:1.5px solid var(--border);border-radius:24px;padding:32px 28px;text-align:center}
+.slide.dark .layer{background:rgba(255,255,255,.05);border-color:rgba(255,255,255,.12)}
+.layer .ln{font-family:var(--font-mono);font-size:20px;letter-spacing:.1em;color:var(--accent);text-transform:uppercase;display:block;margin-bottom:10px}
+.layer h3{font-size:30px;margin-bottom:10px}
+.layer p{font-size:22px;color:var(--muted);line-height:1.5}
+.slide.dark .layer p{color:var(--darkmuted)}
+.layer code{font-family:var(--font-mono);font-size:20px;background:oklch(94% 0.01 250);padding:2px 10px;border-radius:8px}
+.slide.dark .layer code{background:rgba(255,255,255,.1);color:var(--darkfg)}
+.arrow{display:grid;place-items:center;font-family:var(--font-mono);font-size:22px;color:var(--accent);padding:0 14px;text-align:center}
+.arrow small{display:block;font-size:18px;color:var(--muted)}
+.branchbox{background:var(--surface);border:1.5px solid var(--border);border-radius:20px;padding:32px 40px;margin-top:40px;font-family:var(--font-mono);font-size:26px;line-height:2}
+.branchbox .m{color:var(--accent);font-weight:700}.branchbox .f{color:#0969da;font-weight:700}.branchbox .c{color:var(--muted)}
+.danger{border:1.5px solid oklch(60% 0.18 25 / 45%);background:oklch(60% 0.18 25 / 8%);border-radius:18px;padding:24px 32px;margin-top:32px;font-size:26px}
+.danger b{color:var(--danger)}
+.keymenu{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:28px;margin-top:44px}
+.keymenu .card .tag{font-family:var(--font-mono);font-size:20px;letter-spacing:.08em;text-transform:uppercase;display:inline-block;padding:6px 18px;border-radius:999px;margin-bottom:14px}
+.tag.rec{background:oklch(58% 0.16 145 / 14%);color:var(--accent);border:1px solid oklch(58% 0.16 145 / 45%)}
+.tag.alt{background:oklch(94% 0.01 250);color:var(--muted);border:1px solid var(--border)}
+.bigstat{font-family:var(--font-display);font-size:180px;font-weight:700;letter-spacing:-.03em;line-height:1;color:var(--accent)}
+</style>
+</head>
+<body>
+<div class="deck-shell"><div class="deck-stage" id="deck-stage">
+
+<!-- 01 COVER -->
+<section class="slide active" data-screen-label="01 Cover"><div class="canvas">
+<div class="pill">ALGORYTHM · IIT BHILAI · SESSION 2 · 08 OCT 2026 · L202</div>
+<div class="kicker">Git basics · Your own agent — LIVE · CTF</div>
+<h1 class="hero">Git + your<br/>own agent.</h1>
+<p class="sub">Last time: map + first bio page. Tonight: version it like a pro, then make an AI edit it live — and push it back to GitHub. Bring your laptop. 3:30 help desk, 4 PM main session.</p>
+<div class="foot"><span>Part 1 Git · Part 2 Agents LIVE · Part 3 CTF</span><span>01 / 23</span></div>
+</div></section>
+
+<!-- 02 AGENDA -->
+<section class="slide" data-screen-label="02 Agenda"><div class="canvas">
+<div class="kicker">Tonight's run-of-show</div>
+<h2 class="t">Three blocks. All hands-on.</h2>
+<div class="grid3">
+<div class="card"><span class="num">PART 1 / GIT</span><h3>Git + GitHub, for real</h3><p>4-layer mental model, clone → push loop, branches, PRs, merge conflicts, token setup. With a cheat sheet.</p></div>
+<div class="card"><span class="num">PART 2 / AGENT · LIVE</span><h3>Your own agent edits your page</h3><p>VS Code + Kilo Code extension, give it context, free Gemini key, push the upgrade.</p></div>
+<div class="card"><span class="num">PART 3 / CTF</span><h3>Flag-hunting continues</h3><p>Jagath takes over. Stego round 2 — same workflow, harder images.</p></div>
+</div>
+<div class="foot"><span>Follow along on your laptop — every block has a try-it moment</span><span>02 / 23</span></div>
+</div></section>
+
+<!-- 03 LOGISTICS -->
+<section class="slide" data-screen-label="03 Setup checklist"><div class="canvas">
+<div class="kicker">Before we start — 2 minutes</div>
+<h2 class="t sm">If any box is unticked, fix it now.</h2>
+<div class="grid4">
+<div class="card"><span class="num">☐ 1</span><h3>Laptop + charger</h3><p>You will type in every block. No spectators tonight.</p></div>
+<div class="card"><span class="num">☐ 2</span><h3>VS Code installed</h3><p>code.visualstudio.com — any OS. Open it once before 4 PM.</p></div>
+<div class="card"><span class="num">☐ 3</span><h3>GitHub account</h3><p>github.com/signup. Note your username — you will push with it.</p></div>
+<div class="card"><span class="num">☐ 4</span><h3>Stuck? 3:30 desk</h3><p>Come at 3:30 to L202. We help with install + login. Main show 4 PM.</p></div>
+</div>
+<div class="foot"><span>Help desk 3:30 PM · Main session 4:00 PM · L202</span><span>03 / 23</span></div>
+</div></section>
+
+<!-- 04 RECAP -->
+<section class="slide dark" data-screen-label="04 Recap S1"><div class="canvas">
+<div class="kicker dk">Session 1 → Session 2</div>
+<h2 class="t">You shipped a bio page. Now version it.</h2>
+<ul class="ticks">
+<li>Session 1 homework: <code>index.html</code> bio + links + CSS, pushed with <code>git add · commit · push</code>.</li>
+<li>Best pages get spotlighted next — link drops in the WhatsApp group.</li>
+<li>Tonight's upgrade: proper Git moves <i>plus</i> an agent that edits that same page with you.</li>
+</ul>
+<p class="note" style="margin-top:28px">Speaker cue: show 2–3 best bio pages, 1 min each. Then: "every change from tonight = one commit".</p>
+<div class="foot"><span>Proof (GitHub) + story (LinkedIn) — from last session</span><span>04 / 23</span></div>
+</div></section>
+
+<!-- 05 LAYERS -->
+<section class="slide dark" data-screen-label="05 Four layers"><div class="canvas">
+<div class="kicker dk">Part 1 · the mental model — read this once, Git clicks forever</div>
+<h2 class="t sm">Four layers. Three moves between them.</h2>
+<div class="layers">
+<div class="layer"><span class="ln">Layer 1 · Machine</span><h3>Working files</h3><p>Your edits.<br/><code>git status</code> sees them</p></div>
+<div class="arrow">─▸<small>add</small></div>
+<div class="layer"><span class="ln">Layer 2 · On device</span><h3>Staged + history</h3><p><code>commit · rebase</code><br/><code>git log</code> lives here</p></div>
+<div class="arrow">─▸<small>push / pull</small></div>
+<div class="layer"><span class="ln">Layer 3 · Yours online</span><h3>Your GitHub repo</h3><p><code>git push</code> sends<br/><code>git pull</code> fetches</p></div>
+<div class="arrow">─▸<small>fork / PR</small></div>
+<div class="layer"><span class="ln">Layer 4 · Theirs online</span><h3>Someone else's repo</h3><p>Fork it, PR it,<br/>merge it back</p></div>
+</div>
+<div class="foot"><span>Layers 1–2 never leave your laptop · Layers 3–4 are GitHub</span><span>05 / 23</span></div>
+</div></section>
+
+<!-- 06 THE LOOP -->
+<section class="slide" data-screen-label="06 The loop"><div class="canvas">
+<div class="live">Live · type with us</div>
+<h2 class="t sm">One loop runs the whole night.</h2>
+<div class="split">
+<div class="code"><span class="c">$ clone once, loop forever</span><br/>git clone &lt;url&gt;<br/>git status<br/>git add index.html<br/>git commit -m <span class="g">"describe the change"</span><br/>git push<br/>git pull <span class="c"># before you start</span></div>
+<div><ul class="ticks">
+<li><code>clone</code> once — copies Layer 3/4 down to your machine.</li>
+<li>Loop daily: <code>status → add → commit → push</code>.</li>
+<li><code>pull</code> first when collaborating — avoids half your conflicts.</li>
+</ul></div>
+</div>
+<div class="foot"><span>Clone is download + history · Pull is update + merge</span><span>06 / 23</span></div>
+</div></section>
+
+<!-- 07 CHEAT SHEET -->
+<section class="slide" data-screen-label="07 Cheat sheet"><div class="canvas">
+<div class="kicker">Part 1 · keep this photo on your phone</div>
+<h2 class="t sm">The only 8 commands tonight.</h2>
+<div class="grid4">
+<div class="card"><span class="num">SEE</span><h3><code>status · log · diff</code></h3><p>What changed, what shipped, line-by-line how.</p></div>
+<div class="card"><span class="num">SAVE</span><h3><code>add · commit</code></h3><p>Stage files, freeze a snapshot with a message.</p></div>
+<div class="card"><span class="num">SYNC</span><h3><code>clone · push · pull</code></h3><p>Copy down, send up, merge down.</p></div>
+<div class="card"><span class="num">SPLIT</span><h3><code>branch · checkout</code></h3><p>Parallel timelines. Break things safely.</p></div>
+</div>
+<p class="note" style="margin-top:26px">Full sheet: git-scm.com/docs + GitHub Skills. Tonight we demo each one live — no mugging up.</p>
+<div class="foot"><span>Screenshot this slide</span><span>07 / 23</span></div>
+</div></section>
+
+<!-- 08 BRANCHES -->
+<section class="slide" data-screen-label="08 Branches"><div class="canvas">
+<div class="kicker">Part 1 · branches — the idea that makes teams possible</div>
+<h2 class="t sm">main stays safe. You play on a branch.</h2>
+<div class="split">
+<div class="branchbox"><span class="c">$ experiment without fear</span><br/>git branch redesign<br/>git checkout redesign <span class="c"># or: git checkout -b redesign</span><br/><span class="m">●──●──● main</span> <span class="c">(safe, deployable)</span><br/><span class="f">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;╰──●──● redesign</span> <span class="c">(your playground)</span><br/>git checkout main → git merge redesign</div>
+<div><ul class="ticks">
+<li>A branch is just a movable label on a commit.</li>
+<li>Rule: never demo-broken code on <code>main</code>.</li>
+<li>Merge = join your playground back into <code>main</code>.</li>
+</ul></div>
+</div>
+<div class="foot"><span>Branch per feature · merge when it works</span><span>08 / 23</span></div>
+</div></section>
+
+<!-- 09 CLONE + DIFF -->
+<section class="slide" data-screen-label="09 Clone diff"><div class="canvas">
+<div class="live">Live · try it</div>
+<h2 class="t sm"><code>clone</code> + <code>diff</code>: look before you leap.</h2>
+<div class="grid2">
+<div class="code" style="font-size:26px"><span class="c">$ copy any repo down</span><br/>git clone https://github.com/you/bio.git<br/>cd bio<br/>git status <span class="c"># what changed?</span><br/>git diff <span class="c"># exact lines changed</span><br/>git log --oneline <span class="c"># what shipped?</span></div>
+<div class="card"><span class="num">READ THE DIFF LIKE THIS</span><h3><code>-</code> removed · <code>+</code> added</h3><p>Red lines left your file, green lines entered. If the diff surprises you, don't <code>add</code> yet. <code>diff</code> is your pre-commit review.</p></div>
+</div>
+<div class="foot"><span>Status = overview · Diff = details · Log = history</span><span>09 / 23</span></div>
+</div></section>
+
+<!-- 10 RESET -->
+<section class="slide" data-screen-label="10 Reset"><div class="canvas">
+<div class="kicker">Part 1 · undo — three levels of "oops"</div>
+<h2 class="t sm">Undo small. Rarely nuke.</h2>
+<div class="grid3">
+<div class="card"><span class="num">SOFT UNDO</span><h3><code>git restore file</code></h3><p>Discard edits in one file. File goes back to last commit. Safe.</p></div>
+<div class="card"><span class="num">UNSTAGE</span><h3><code>git reset file</code></h3><p>Un-<code>add</code> a file. Edits stay, staging undone. Very safe.</p></div>
+<div class="card"><span class="num">☠ NUKE</span><h3><code>git reset --hard</code></h3><p>Erase ALL uncommitted work. No undo. Demo it once, fear it forever.</p></div>
+</div>
+<div class="danger"><b>Golden rule:</b> <code>--hard</code> destroys work permanently. Commit first (<code>git commit -m "wip"</code>), then experiment — you can always come back.</div>
+<div class="foot"><span>Restore = discard edits · Reset = unstage · --hard = erase</span><span>10 / 23</span></div>
+</div></section>
+
+<!-- 11 PRs -->
+<section class="slide dark" data-screen-label="11 PRs"><div class="canvas">
+<div class="kicker dk">Part 1 · how the open-source world collaborates</div>
+<h2 class="t sm">You never push to their repo. You PR it.</h2>
+<div class="grid4">
+<div class="card"><span class="num">1</span><h3>Fork</h3><p>Copy their repo (Layer 4) to your account (Layer 3). One click on GitHub.</p></div>
+<div class="card"><span class="num">2</span><h3>Clone + branch</h3><p><code>clone</code> your fork, make a branch, commit the fix.</p></div>
+<div class="card"><span class="num">3</span><h3>Push + PR</h3><p><code>push</code> branch, click "Compare &amp; pull request". Describe <i>why</i>.</p></div>
+<div class="card"><span class="num">4</span><h3>Merge</h3><p>Maintainer reviews, approves, merges. Your commit lands upstream.</p></div>
+</div>
+<p class="sub">Homework repos, GSoC, internships — every contribution you will ever make follows these 4 steps.</p>
+<div class="foot"><span>Fork → branch → push → pull request → merge</span><span>11 / 23</span></div>
+</div></section>
+
+<!-- 12 CONFLICTS -->
+<section class="slide" data-screen-label="12 Conflicts"><div class="canvas">
+<div class="live">Live · we will break one on purpose</div>
+<h2 class="t sm">Conflicts aren't errors. They're Git asking you.</h2>
+<div class="split">
+<div class="code" style="font-size:25px"><span class="c"># Git marks the fight — you pick the winner</span><br/>&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD<br/>background: navy; <span class="c"># yours</span><br/>=======<br/>background: teal; <span class="c"># theirs</span><br/>&gt;&gt;&gt;&gt;&gt;&gt;&gt; redesign<br/><span class="c">$ then:</span> edit → git add → git commit</div>
+<div><ul class="ticks">
+<li><b>Why:</b> same lines changed in two places. Git can't guess — so it asks.</li>
+<li><b>Fix:</b> open the file, delete markers, keep what looks right.</li>
+<li><b>Finish:</b> <code>add + commit</code>. Conflict resolved, history clean.</li>
+</ul></div>
+</div>
+<div class="foot"><span>Pull often · commit small · conflicts stay tiny</span><span>12 / 23</span></div>
+</div></section>
+
+<!-- 13 TOKEN SETUP -->
+<section class="slide dark" data-screen-label="13 Token setup"><div class="canvas">
+<div class="kicker dk">Part 1 · the 5-minute setup from Session 1 — condensed</div>
+<h2 class="t sm">Passwords don't push. Tokens do.</h2>
+<div class="grid4">
+<div class="card"><span class="num">1</span><h3>Create token</h3><p>Settings → Developer settings → Fine-grained tokens → Generate. Read + write on your repo. Copy once.</p></div>
+<div class="card"><span class="num">2</span><h3>Push normal</h3><p><code>git push</code>. Git prompts for login.</p></div>
+<div class="card"><span class="num">3</span><h3>Paste token</h3><p>Username = GitHub username. Password = token, <i>not</i> your password.</p></div>
+<div class="card"><span class="num">4</span><h3>Stays saved</h3><p>Keychain / Credential Manager remembers it. No prompt? <code>git config --global credential.helper store</code>.</p></div>
+</div>
+<p class="note" style="margin-top:26px">Full version: first-git-push deck (Session 1). Next step when ready: SSH keys — no tokens, no expiry.</p>
+<div class="foot"><span>Username + token-as-password · cached till expiry</span><span>13 / 23</span></div>
+</div></section>
+
+<!-- 14 PART 2 DIVIDER -->
+<section class="slide dark" data-screen-label="14 Part 2 divider"><div class="canvas" style="align-items:center;text-align:center">
+<div class="pill">PART 2 · THE MAIN EVENT · LIVE</div>
+<h1 class="hero">Your own agent,<br/>editing live.</h1>
+<p class="sub" style="margin-inline:auto">Same bio page from Session 1. This time you won't hand-write every line — you'll direct an agent that does. Watch, then do it on your laptop.</p>
+<div class="foot"><span>VS Code → Kilo Code → free key → edit → push</span><span>14 / 23</span></div>
+</div></section>
+
+<!-- 15 EXTENSIONS -->
+<section class="slide" data-screen-label="15 Extensions"><div class="canvas">
+<div class="kicker">Part 2 · step 1 — the editor becomes an agent</div>
+<h2 class="t sm">An extension = superpower you install.</h2>
+<div class="grid3">
+<div class="card"><span class="num">WHAT</span><h3>Extensions add skills</h3><p>Themes, languages, AI agents — VS Code is plain until you extend it. Extensions live in the left sidebar's square icon.</p></div>
+<div class="card"><span class="num">INSTALL</span><h3>Kilo Code in 30 sec</h3><p>Extensions (<code>Ctrl/Cmd+Shift+X</code>) → search <code>Kilo Code</code> → Install → pin it to the sidebar.</p></div>
+<div class="card"><span class="num">OTHERS EXIST</span><h3>Kilo is one example</h3><p>Cline, Roo, Copilot, <b>OpenCode</b> (terminal-first) — same idea, different shell. Learn one deeply; switching is easy.</p></div>
+</div>
+<div class="foot"><span>Install Kilo Code now — we wait 60 seconds</span><span>15 / 23</span></div>
+</div></section>
+
+<!-- 16 KILO CLI -->
+<section class="slide" data-screen-label="16 Kilo CLI"><div class="canvas">
+<div class="kicker">Part 2 · step 2 — same agent, inside your terminal</div>
+<h2 class="t sm">Sidebar for clicks. CLI for speed.</h2>
+<div class="split">
+<div class="code"><span class="c">$ the agent, in your terminal</span><br/>npm install -g @kilo/cli <span class="c"># or: brew install kilo</span><br/>kilo <span class="c"># opens agent in this repo</span><br/>/add index.html <span class="c"># attach context</span></div>
+<div><ul class="ticks">
+<li>Kilo <b>extension</b> = buttons + chat beside your code. Start here.</li>
+<li>Kilo <b>CLI</b> = same brain in the terminal. Same keys, scriptable.</li>
+<li>Prefer terminals? Try <b>OpenCode</b> the same way. Concepts transfer.</li>
+</ul></div>
+</div>
+<div class="foot"><span>Extension today · CLI when you're comfortable</span><span>16 / 23</span></div>
+</div></section>
+
+<!-- 17 CONTEXT -->
+<section class="slide dark" data-screen-label="17 Context"><div class="canvas">
+<div class="kicker dk">Part 2 · the skill that decides everything — recap from Session 1</div>
+<h2 class="t sm">AI has no memory. Context is your job.</h2>
+<div class="split">
+<div><ul class="ticks">
+<li>Remember <code>proximity-modular-core.json</code>? ~975k tokens re-read every turn. Same with your agent.</li>
+<li>Tag files: <code>@index.html</code> <code>@style.css</code> — never say "my page", show it.</li>
+<li>One task per prompt. Small ask → review → next ask. Be the director, not the typist.</li>
+</ul></div>
+<div class="code"><span class="c"># vague (bad)</span><br/>"make it nice"<br/><span class="c"># directed (good)</span><br/>"@index.html @style.css:<br/>make hero responsive,<br/>keep green accent,<br/>no new deps" <span class="g">✓</span></div>
+</div>
+<div class="foot"><span>Prompt engineering = context engineering</span><span>17 / 23</span></div>
+</div></section>
+
+<!-- 18 LIVE DEMO SCRIPT -->
+<section class="slide" data-screen-label="18 Demo script"><div class="canvas">
+<div class="live">Live · the 5-minute upgrade — do it with us</div>
+<h2 class="t sm">Three prompts. Watch your page grow.</h2>
+<div style="display:flex;flex-direction:column;gap:20px;margin-top:36px">
+<div class="step"><b>1</b><p><code>@index.html</code> — "Add a responsive hero with my name, one-line bio, and my GitHub + LinkedIn links. Keep it single-file."</p></div>
+<div class="step"><b>2</b><p><code>@index.html @style.css</code> — "Move styles to style.css, add dark section + green accent like the ALGORYTHM slides, mobile-friendly."</p></div>
+<div class="step"><b>3</b><p>"Add <code>data.json</code> with my name + interests, and render it into the page with vanilla JS. Explain each change."</p></div>
+</div>
+<p class="note" style="margin-top:24px">Speaker: run prompt 1 fully, review the diff in VS Code, accept, then prompt 2. Always show the diff before accepting.</p>
+<div class="foot"><span>Review every diff before you accept — you are the author</span><span>18 / 23</span></div>
+</div></section>
+
+<!-- 19 API KEYS -->
+<section class="slide" data-screen-label="19 API keys"><div class="canvas">
+<div class="live">Live · free key in 2 minutes</div>
+<h2 class="t sm">Agents need a key. Gemini is the easiest free one.</h2>
+<div class="split">
+<div><ul class="ticks">
+<li><b>Get it:</b> aistudio.google.com → Get API Key → Create → copy once.</li>
+<li><b>Use it:</b> Kilo Code settings → paste key → pick a Gemini model.</li>
+<li><b>Protect it:</b> keys live in <code>.env</code>, and <code>.env</code> lives in <code>.gitignore</code>. Leaked it? Revoke + regenerate immediately.</li>
+</ul></div>
+<div class="code" style="font-size:25px"><span class="c"># never commit secrets</span><br/>echo ".env" &gt;&gt; .gitignore<br/>cat .gitignore <span class="c"># confirm .env listed</span><br/>git status <span class="c"># .env must NOT appear</span></div>
+</div>
+<div class="foot"><span>A key is a password — never push it, never screenshot it</span><span>19 / 23</span></div>
+</div></section>
+
+<!-- 20 MODEL MENU -->
+<section class="slide dark" data-screen-label="20 Model menu"><div class="canvas">
+<div class="kicker dk">Part 2 · one key to start — any key when you grow</div>
+<h2 class="t sm">Start with Gemini. Judge the rest yourself.</h2>
+<div class="keymenu">
+<div class="card"><span class="tag rec">★ Start here</span><h3>Gemini</h3><p>Google AI Studio free key. Generous, easy, good for homework edits.</p></div>
+<div class="card"><span class="tag alt">Fast</span><h3>Groq</h3><p>Very fast inference free tier. Great when you iterate a lot.</p></div>
+<div class="card"><span class="tag alt">Many</span><h3>OpenRouter :free</h3><p>One key, many <code>:free</code> models. Continuation of Session 1.</p></div>
+<div class="card"><span class="tag alt">Zero-setup</span><h3>Kilo built-in</h3><p>Trial credits in Kilo itself. Fine for tonight, quota ends.</p></div>
+</div>
+<p class="sub">Don't trust hype — compare on <b>Artificial Analysis</b> (quality / speed / price leaderboards) and OpenRouter, then pick free + good over best + paid.</p>
+<div class="foot"><span>artificialanalysis.ai · openrouter.ai — the feed is the edge</span><span>20 / 23</span></div>
+</div></section>
+
+<!-- 21 PUSH IT -->
+<section class="slide" data-screen-label="21 Push it"><div class="canvas">
+<div class="live">Live · close the loop</div>
+<h2 class="t sm">Agent edited it. Now ship it.</h2>
+<div class="split">
+<div class="code"><span class="c">$ the loop, again — with agent help</span><br/>git status <span class="c"># review what agent changed</span><br/>git diff <span class="c"># read it, don't blind-accept</span><br/>git add index.html style.css data.json<br/>git commit -m <span class="g">"agent: responsive hero + data.json"</span><br/>git push</div>
+<div><ul class="ticks">
+<li>Every agent change = one commit with a clear message.</li>
+<li><code>.env</code> must never appear in <code>status</code>. If it does, stop.</li>
+<li>Refresh your GitHub repo — your upgraded page is proof of work.</li>
+</ul></div>
+</div>
+<div class="foot"><span>Status → diff → add → commit → push — every time</span><span>21 / 23</span></div>
+</div></section>
+
+<!-- 22 ROADMAP -->
+<section class="slide" data-screen-label="22 Roadmap"><div class="canvas">
+<div class="kicker">Hungry? Don't wander — follow a path</div>
+<h2 class="t sm">One roadmap beats ten tutorials.</h2>
+<div class="grid3">
+<div class="card"><span class="num">PATH</span><h3>roadmap.sh</h3><p>Frontend → Backend → Git → DevOps, in order. Pick ONE track this month. (Thanks Bhargav for the find.)</p></div>
+<div class="card"><span class="num">RULE</span><h3>Docs first, then build</h3><p>Official docs + one small project beat 20 bookmarked videos. Stuck 15 min → ask in the group.</p></div>
+<div class="card"><span class="num">HABIT</span><h3>One video a day</h3><p>Fireship for breadth, 3Blue1Brown for depth, Two-Minute Papers for wonder — from Session 1.</p></div>
+</div>
+<div class="foot"><span>roadmap.sh — pick a track, walk it daily</span><span>22 / 23</span></div>
+</div></section>
+
+<!-- 23 CTF + CLOSE -->
+<section class="slide dark" data-screen-label="23 CTF handoff"><div class="canvas">
+<div class="kicker dk">Part 3 · handoff — Jagath takes the stage → then homework</div>
+<h2 class="t" style="font-size:96px">Map ✓&nbsp; Ship ✓<br/>Game →</h2>
+<ul class="ticks">
+<li>CTF round 2 with Jagath — same workflow as Session 1 (<code>file · exiftool · strings · binwalk · LSB</code>), harder images.</li>
+<li><b>Homework:</b> agent-upgrade your bio page, push ≥2 commits, drop the repo link in the WhatsApp group. Best pages on stage next session.</li>
+<li>Doubts → WhatsApp group. Fill the feedback form — it shapes Session 3.</li>
+</ul>
+<p class="note" style="margin-top:24px">Speaker notes: recap 2 min (layers → agent → push), hand mic to Jagath. Total talk ~60–70 min + CTF block.</p>
+<div class="foot"><span>See you in the CTF block — laptops open</span><span>23 / 23</span></div>
+</div></section>
+
+</div></div>
+<nav class="deck-counter" role="navigation" aria-label="Deck navigation"><button type="button" id="deck-prev" aria-label="Previous slide">‹</button><span class="deck-count"><span id="deck-cur">01</span> <span class="total">/ <span id="deck-total">01</span></span></span><button type="button" id="deck-next" aria-label="Next slide">›</button></nav>
+<div class="deck-hint">← / → · space · R reset</div>
+<script>
+(function(){var stage=document.getElementById('deck-stage');var slides=Array.prototype.slice.call(document.querySelectorAll('.slide'));var prev=document.getElementById('deck-prev');var next=document.getElementById('deck-next');var cur=document.getElementById('deck-cur');var total=document.getElementById('deck-total');var STORE='deck:idx:'+(location.pathname||'/');var idx=0;
+function fit(){var sw=window.innerWidth,sh=window.innerHeight,pad=32;var s=Math.min((sw-pad)/1920,(sh-pad)/1080);if(!isFinite(s)||s<=0)s=1;var tx=(sw-1920*s)/2,ty=(sh-1080*s)/2;stage.style.transform='translate('+tx+'px,'+ty+'px) scale('+s+')';}
+function pad2(n){return(n<10?'0':'')+n;}
+function paint(){slides.forEach(function(el,i){el.classList.toggle('active',i===idx);});if(cur)cur.textContent=pad2(idx+1);if(total)total.textContent=pad2(slides.length);if(prev)prev.toggleAttribute('disabled',idx<=0);if(next)next.toggleAttribute('disabled',idx>=slides.length-1);try{window.parent.postMessage({type:'od:slide-state',protocolVersion:1,active:idx,count:slides.length},'*');}catch(_){}}
+function go(i){idx=Math.max(0,Math.min(slides.length-1,i));paint();try{localStorage.setItem(STORE,String(idx));}catch(_){}}
+window.addEventListener('message',function(e){var d=e&&e.data;if(!d||d.type!=='od:slide')return;var t=idx;if(d.action==='go'){if(typeof d.index!=='number')return;t=Math.floor(d.index);}else if(d.action==='next')t=idx+1;else if(d.action==='prev')t=idx-1;else if(d.action==='first')t=0;else if(d.action==='last')t=slides.length-1;else return;go(t);});
+function onKey(e){if(e.__odDeckKeyHandled)return;var t=e.target;if(t&&(t.tagName==='INPUT'||t.tagName==='TEXTAREA'||t.isContentEditable))return;if(e.metaKey||e.ctrlKey||e.altKey||e.shiftKey)return;if(e.key==='ArrowRight'||e.key==='PageDown'||e.key===' '){e.__odDeckKeyHandled=true;e.preventDefault();go(idx+1);}else if(e.key==='ArrowLeft'||e.key==='PageUp'){e.__odDeckKeyHandled=true;e.preventDefault();go(idx-1);}else if(e.key==='Home'||String(e.key).toLowerCase()==='r'){e.__odDeckKeyHandled=true;e.preventDefault();go(0);}else if(e.key==='End'){e.__odDeckKeyHandled=true;e.preventDefault();go(slides.length-1);}}
+window.addEventListener('keydown',onKey,true);document.addEventListener('keydown',onKey,true);
+if(prev)prev.addEventListener('click',function(){go(idx-1);});if(next)next.addEventListener('click',function(){go(idx+1);});
+document.addEventListener('click',function(e){if(e.defaultPrevented)return;if(e.button!==undefined&&e.button!==0)return;if(e.metaKey||e.ctrlKey||e.altKey||e.shiftKey)return;var t=e.target;while(t&&t!==document.body&&t!==document.documentElement){var tag=String(t.tagName||'').toUpperCase();if(tag==='A'||tag==='BUTTON'||tag==='INPUT'||tag==='TEXTAREA'||tag==='SELECT'||t.isContentEditable||t.getAttribute('role')==='button')return;t=t.parentElement;}try{window.focus();document.body.focus({preventScroll:true});}catch(_){}if(e.clientX<window.innerWidth/2)go(idx-1);else go(idx+1);},true);
+document.body.setAttribute('tabindex','-1');document.body.style.outline='none';
+try{var s=parseInt(localStorage.getItem(STORE)||'0',10);if(!isNaN(s)&&s>=0&&s<slides.length)idx=s;}catch(_){}
+window.addEventListener('resize',fit);try{window.parent.postMessage({type:'od:deck-ready',protocolVersion:1,capabilities:["absolute-navigation","state-events"]},'*');}catch(_){}fit();paint();})();
+</script>
+</body>
+</html>

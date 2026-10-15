@@ -1,0 +1,145 @@
+name: validate-and-automerge
+
+on:
+  pull_request_target:
+    types: [opened, synchronize, reopened]
+    branches: [main]
+
+permissions:
+  contents: write
+  pull-requests: write
+  issues: write
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: PR basics (base + branch-first rule)
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          HEAD_REF: ${{ github.event.pull_request.head.ref }}
+          HEAD_REPO: ${{ github.event.pull_request.head.repo.full_name }}
+          BASE_REPO: ${{ github.event.pull_request.base.repo.full_name }}
+          BASE_REF: ${{ github.event.pull_request.base.ref }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          PR_TITLE: ${{ github.event.pull_request.title }}
+        run: |
+          echo "base=$BASE_REF head=$HEAD_REF ($HEAD_REPO -> $BASE_REPO) title=$PR_TITLE"
+          # 1. base must be main (enforced by trigger, double-check)
+          if [ "$BASE_REF" != "main" ]; then
+            MSG="❌ Base branch must be \`main\`. Please retarget your PR to \`main\`."
+            echo "$MSG"; gh pr comment "$PR_NUMBER" --repo "$BASE_REPO" --body "$MSG"
+            exit 1
+          fi
+          # 2. branch-first rule: head must NOT be main/master
+          if [ "$HEAD_REF" = "main" ] || [ "$HEAD_REF" = "master" ]; then
+            MSG="❌ **Rejected: you opened this PR from \`$HEAD_REF\`.**
+          You MUST create your own branch first. PRs from \`main\`/\`master\` are never merged.
+
+          Fix locally (see README §1):
+          \`\`\`bash
+          git fetch upstream
+          git checkout main
+          git reset --hard upstream/main
+          git checkout -b add-<NAME>-<ID>
+          # move your changes onto the new branch, then push it and open a NEW PR from it
+          \`\`\`
+          Close this PR and reopen from \`add-<NAME>-<ID>\`."
+            echo "$MSG"; gh pr comment "$PR_NUMBER" --repo "$BASE_REPO" --body "$MSG"
+            exit 1
+          fi
+          # 3. branch naming + title format (soft-enforced, hard-fail for auto-merge)
+          if ! echo "$HEAD_REF" | grep -Eq '^(add|update)-[A-Za-z][A-Za-z0-9_-]*-[A-Za-z0-9_-]+$'; then
+            MSG="❌ **Bad branch name \`$HEAD_REF\`.**
+          Use \`add-<NAME>-<ID>\` for new pages or \`update-<NAME>-<ID>\` for edits. Example: \`add-Swarnadip-12345\`.
+          Your folder must be \`students/<NAME>-<ID>/\` with the SAME case."
+            echo "$MSG"; gh pr comment "$PR_NUMBER" --repo "$BASE_REPO" --body "$MSG"
+            exit 1
+          fi
+          if ! echo "$PR_TITLE" | grep -Eq '^(add|update): *[^ ]+-[^ ]+$'; then
+            MSG="❌ **Bad PR title \`$PR_TITLE\`.**
+          Title must be \`add: <NAME>-<ID>\` (or \`update: <NAME>-<ID>\`). Example: \`add: Swarnadip-12345\`."
+            echo "$MSG"; gh pr comment "$PR_NUMBER" --repo "$BASE_REPO" --body "$MSG"
+            exit 1
+          fi
+
+      - name: Merge-conflict check (reject if conflicting)
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          BASE_REPO: ${{ github.event.pull_request.base.repo.full_name }}
+        run: |
+          # mergeable: MERGEABLE | CONFLICTING | UNKNOWN — retry once for UNKNOWN
+          for i in 1 2 3; do
+            STATE=$(gh pr view "$PR_NUMBER" --repo "$BASE_REPO" --json mergeable,mergeStateStatus -q '.mergeable + "/" + .mergeStateStatus')
+            echo "attempt $i: $STATE"
+            case "$STATE" in
+              CONFLICTING*|*CONFLICTING*) break;;
+              MERGEABLE*|*CLEAN*|*HAS_HOOKS*|*UNSTABLE*) break;;
+            esac
+            sleep 5
+          done
+          if echo "$STATE" | grep -qi "CONFLICT"; then
+            gh pr comment "$PR_NUMBER" --repo "$BASE_REPO" --body "❌ **Rejected: this PR has merge conflicts and will NOT be merged.**
+          Almost always this means someone else edited \`students.json\` before you.
+
+          **Resolve locally first, then push** (see README §2 — do NOT just click Resolve on github.com):
+          \`\`\`bash
+          git fetch upstream
+          git checkout <your-branch>   # e.g. add-Swarnadip-12345
+          git rebase upstream/main     # or: git merge upstream/main
+          # open students.json → keep BOTH entries (yours + theirs), delete <<<<<<< ======= >>>>>>> markers
+          python3 -c \"import json; json.load(open('students.json')); print('JSON OK')\"
+          git add students.json
+          git rebase --continue        # or: git commit (if you merged)
+          git push --force-with-lease
+          \`\`\`
+          The bot re-checks automatically once conflicts are gone. 🤖"
+            exit 1
+          fi
+          echo "merge state OK: $STATE"
+
+      - name: Checkout PR head (full history)
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ github.event.pull_request.head.repo.full_name }}
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0
+
+      - name: Fetch base main
+        run: |
+          git remote add upstream "https://github.com/${{ github.event.pull_request.base.repo.full_name }}.git" || true
+          git fetch upstream main --depth=50
+
+      - name: Content validation (files + students.json + index.html)
+        id: content
+        run: |
+          python3 .github/scripts/validate.py --base upstream/main --head HEAD
+        # on failure, next step comments the log
+
+      - name: Comment on content-validation failure
+        if: failure() && steps.content.outcome == 'failure'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          BASE_REPO: ${{ github.event.pull_request.base.repo.full_name }}
+        run: |
+          gh pr comment "$PR_NUMBER" --repo "$BASE_REPO" --body "❌ **Content validation failed.** See the failing \`validate\` job log for the exact rule.
+
+          Quick checklist (README §1):
+          - Changed files = ONLY \`students/<NAME>-<ID>/**\` + \`students.json\` (nothing else, never \`students/_template/\`)
+          - \`students.json\` adds EXACTLY one entry: \`folder == name-id\`, \`page == students/<folder>/index.html\`, no duplicates
+          - \`students/<NAME>-<ID>/index.html\` exists, has \`<html>\` + \`<h1>\`/\`<title>\`, folder < 500 KB
+          - For bio edits: leave \`students.json\` untouched, touch ONLY your own listed folder
+
+          Fix on the SAME branch and push — the bot re-runs automatically. 🤖"
+
+      - name: Auto-merge compliant PR 🤖
+        if: success()
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          BASE_REPO: ${{ github.event.pull_request.base.repo.full_name }}
+        run: |
+          gh pr comment "$PR_NUMBER" --repo "$BASE_REPO" --body "✅ **Validation passed.** Auto-merging… welcome to ALGORYTHM! 🎉 Your page will appear on the hub after Pages redeploys (~1 min)."
+          gh pr merge "$PR_NUMBER" --repo "$BASE_REPO" --squash --delete-branch

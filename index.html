@@ -1,0 +1,161 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>ALGORYTHM Sessions — IIT Bhilai</title>
+<meta name="description" content="Main hub for ALGORYTHM session slide decks + student bio pages. Students submit via PR." />
+<style>
+:root{
+  --bg:#0b0e14; --panel:#121724; --panel2:#1a2236;
+  --fg:#eef2ff; --muted:#9aa7c7; --border:#26314d;
+  --accent:#4ade80; --accent2:#60a5fa; --warn:#fbbf24;
+  --radius:14px;
+  --font: -apple-system,BlinkMacSystemFont,"Inter","Segoe UI",system-ui,sans-serif;
+  --mono: ui-monospace,"JetBrains Mono","IBM Plex Mono",Menlo,monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:radial-gradient(1000px 500px at 20% -10%,#16213d 0%,var(--bg) 55%) fixed,var(--bg);color:var(--fg);font:16px/1.6 var(--font);min-height:100vh}
+a{color:var(--accent2)}
+.wrap{max-width:1080px;margin:0 auto;padding:32px 20px 64px}
+header.top{display:flex;gap:16px;align-items:center;justify-content:space-between;flex-wrap:wrap;margin-bottom:20px}
+.brand{display:flex;gap:14px;align-items:center}
+.logo{width:48px;height:48px;border-radius:12px;background:linear-gradient(135deg,var(--accent),var(--accent2));display:grid;place-items:center;font-weight:800;color:#06130c;font-size:22px}
+h1{font-size:clamp(24px,4vw,36px);letter-spacing:-.02em}
+.sub{color:var(--muted);margin-top:4px}
+.btn-row{display:flex;gap:10px;flex-wrap:wrap}
+.btn{display:inline-block;padding:10px 16px;border-radius:999px;border:1px solid var(--border);background:var(--panel);color:var(--fg);text-decoration:none;font-weight:600;font-size:14px}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:#06130c}
+.btn:hover{filter:brightness(1.1)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:14px;margin-top:14px}
+.card{background:linear-gradient(180deg,var(--panel),var(--panel2));border:1px solid var(--border);border-radius:var(--radius);padding:18px}
+.card h3{font-size:18px;margin-bottom:6px}
+.meta{color:var(--muted);font-size:13px;font-family:var(--mono);margin-bottom:8px}
+.desc{color:#cbd5e1;font-size:14px;margin-bottom:12px}
+.links{display:flex;gap:8px;flex-wrap:wrap}
+.links a{font-size:13px;padding:6px 12px;border-radius:999px;border:1px solid var(--border);background:#0e1424;color:var(--fg);text-decoration:none}
+.links a.main{background:var(--accent2);border-color:var(--accent2);color:#06121f;font-weight:700}
+.links a:hover{filter:brightness(1.15)}
+section{margin-top:32px}
+section>h2{font-size:20px;margin-bottom:4px}
+section>p.hint{color:var(--muted);font-size:14px;margin-bottom:8px}
+.toolbar{display:flex;gap:10px;margin:12px 0;flex-wrap:wrap}
+input[type=search]{flex:1;min-width:220px;padding:10px 14px;border-radius:10px;border:1px solid var(--border);background:#0e1424;color:var(--fg);font-size:14px}
+.count{color:var(--muted);font-size:13px;font-family:var(--mono);align-self:center}
+.student-card{display:flex;flex-direction:column;gap:8px}
+.avatar{width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,#334155,#0ea5e9);display:grid;place-items:center;font-weight:800;font-size:18px}
+.s-top{display:flex;gap:12px;align-items:center}
+.s-name{font-weight:700}
+.s-id{font-family:var(--mono);font-size:12px;color:var(--muted)}
+.howto{background:#0e1424;border:1px dashed var(--border);border-radius:var(--radius);padding:16px;margin-top:12px;font-size:14px;color:#cbd5e1}
+code{font-family:var(--mono);font-size:13px;background:#080c16;padding:2px 6px;border-radius:6px;border:1px solid var(--border)}
+footer{margin-top:48px;color:var(--muted);font-size:13px;border-top:1px solid var(--border);padding-top:16px}
+.error{background:#3f1d1d;border:1px solid #7f2d2d;padding:12px;border-radius:10px;font-size:14px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <div class="brand">
+      <div class="logo">A</div>
+      <div>
+        <h1>ALGORYTHM Sessions</h1>
+        <div class="sub">IIT Bhilai — slide decks + student bio pages. One repo, all sessions.</div>
+      </div>
+    </div>
+    <div class="btn-row">
+      <a class="btn primary" href="https://github.com/" id="repoLink">★ Star / Fork on GitHub</a>
+      <a class="btn" href="README.md">How to add your page →</a>
+    </div>
+  </header>
+
+  <section id="sessions-sec">
+    <h2>📚 Session slide decks</h2>
+    <p class="hint">HTML decks open directly — no download needed. New sessions get appended to <code>sessions.json</code>.</p>
+    <div class="grid" id="sessions"></div>
+  </section>
+
+  <section id="students-sec">
+    <h2>🧑‍💻 Student bio pages</h2>
+    <p class="hint">Each student owns <code>students/&lt;NAME&gt;-&lt;ID&gt;/index.html</code> + one line in <code>students.json</code>. Click a card to open their page. To get featured, open a PR (see README).</p>
+    <div class="toolbar">
+      <input type="search" id="q" placeholder="Search name or ID… (e.g. Swarnadip)" />
+      <span class="count" id="count"></span>
+    </div>
+    <div class="grid" id="students"></div>
+    <div class="howto">
+      <b>Add your page in 4 steps:</b>
+      1) Fork repo → 2) copy <code>students/_template/</code> to <code>students/YourName-YourID/</code> →
+      3) edit your <code>index.html</code> → 4) add one line to <code>students.json</code> → open PR.
+      Full steps in <a href="README.md">README</a>. PRs that follow the format are auto-merged 🤖.
+    </div>
+  </section>
+
+  <footer>
+    <div>Maintained by ALGORYTHM, IIT Bhilai. Pages deploy via GitHub Actions. Student pages are owned by their authors.</div>
+    <div style="margin-top:6px"><a href="students.json">students.json</a> · <a href="sessions.json">sessions.json</a> · <a href="sessions/session-01-intro-explore/">latest slides</a></div>
+  </footer>
+</div>
+
+<script>
+async function loadJSON(path){
+  const r = await fetch(path, {cache:"no-store"});
+  if(!r.ok) throw new Error("Cannot load "+path+" ("+r.status+")");
+  return r.json();
+}
+function el(html){ const t=document.createElement("template"); t.innerHTML=html.trim(); return t.content.firstChild; }
+
+async function main(){
+  try{
+    const [sessions, students] = await Promise.all([loadJSON("sessions.json"), loadJSON("students.json")]);
+
+    const sWrap = document.getElementById("sessions");
+    sWrap.innerHTML = "";
+    sessions.forEach(s=>{
+      const files = (s.files||[]).map(f=>`<a ${f.href===s.deck?'class="main"':""} href="${f.href}">${escapeHtml(f.label)}</a>`).join("");
+      sWrap.appendChild(el(`<div class="card">
+        <h3>${escapeHtml(s.title)}</h3>
+        <div class="meta">${escapeHtml(s.date||"")} · ${escapeHtml(s.id)}</div>
+        <div class="desc">${escapeHtml(s.description||"")}</div>
+        <div class="links"><a class="main" href="${s.deck}">▶ Open deck</a>${files}</div>
+      </div>`));
+    });
+
+    const stWrap = document.getElementById("students");
+    const q = document.getElementById("q");
+    const count = document.getElementById("count");
+    function render(filter=""){
+      const f = filter.trim().toLowerCase();
+      const list = students.filter(s=> !f || (s.name+" "+s.id+" "+s.folder).toLowerCase().includes(f));
+      // sort by name
+      list.sort((a,b)=>a.name.localeCompare(b.name));
+      stWrap.innerHTML = "";
+      list.forEach(s=>{
+        const initial = (s.name||"?")[0].toUpperCase();
+        stWrap.appendChild(el(`<div class="card student-card">
+          <div class="s-top"><div class="avatar">${escapeHtml(initial)}</div>
+          <div><div class="s-name">${escapeHtml(s.name)}</div><div class="s-id">${escapeHtml(s.folder)}</div></div></div>
+          <div class="links"><a class="main" href="${s.page}">Open bio page →</a>
+          ${s.github?`<a href="https://github.com/${encodeURIComponent(s.github)}">GitHub</a>`:""}</div>
+        </div>`));
+      });
+      count.textContent = list.length+" / "+students.length+" students";
+      if(!list.length) stWrap.appendChild(el(`<div class="card">No matches. Check spelling or add yourself via PR.</div>`));
+    }
+    q.addEventListener("input", ()=>render(q.value));
+    render();
+
+    // repo link: infer from location if hosted on github pages
+    try{
+      const m = location.hostname.match(/^(.+)\.github\.io$/);
+      if(m){ document.getElementById("repoLink").href = `https://github.com/${m[1]}/`+location.pathname.split("/")[1]; }
+    }catch(e){}
+  }catch(e){
+    document.getElementById("sessions").innerHTML = `<div class="error">Failed to load JSON: ${escapeHtml(e.message)}. If you opened index.html via file://, serve it (e.g. <code>python3 -m http.server</code>) or check GitHub Pages.</div>`;
+  }
+}
+function escapeHtml(s){ return String(s??"").replace(/[&<>"']/g, c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c])); }
+main();
+</script>
+</body>
+</html>

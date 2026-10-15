@@ -1,0 +1,218 @@
+<!doctype html>
+<html lang="en" data-od-deck-protocol="1">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>ALGORYTHM Session 1 — First Actual Session | IIT Bhilai</title>
+<style>
+:root{
+--bg: oklch(98% 0.005 250);
+--surface: oklch(100% 0 0);
+--fg: oklch(22% 0.02 240);
+--muted: oklch(50% 0.018 240);
+--border: oklch(90% 0.008 240);
+--accent: oklch(58% 0.16 145);
+--font-display: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', system-ui, sans-serif;
+--font-body: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', system-ui, sans-serif;
+--font-mono: 'JetBrains Mono', 'IBM Plex Mono', ui-monospace, Menlo, monospace;
+--shell: #08090d;
+--darkbg: oklch(20% 0.02 250);
+--darkfg: oklch(96% 0.005 250);
+--darkmuted: oklch(72% 0.02 250);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{width:100%;height:100%;overflow:hidden;background:var(--shell);color:var(--fg);font:18px/1.5 -apple-system,system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+.deck-shell{position:fixed;inset:0;overflow:hidden}
+.deck-stage{width:1920px;height:1080px;background:var(--bg);position:relative;transform-origin:top left;box-shadow:0 30px 80px rgba(0,0,0,.35)}
+.slide{position:absolute;inset:0;overflow:hidden}
+.slide:not(.active){display:none!important}
+:where(.slide.active){display:flex;flex-direction:column}
+.deck-counter{position:fixed;bottom:22px;left:50%;transform:translateX(-50%);display:none;align-items:center;gap:4px;background:rgba(10,14,26,.92);padding:6px;border-radius:999px;border:1px solid rgba(255,255,255,.08);color:#fff;font:12px/1 ui-monospace,Menlo,monospace;letter-spacing:.18em;z-index:1000}
+.deck-counter button{width:36px;height:36px;background:transparent;color:#fff;border:0;border-radius:50%;font-size:18px;cursor:pointer;display:grid;place-items:center}
+.deck-counter .deck-count{padding:0 14px;letter-spacing:.22em}
+.deck-counter .deck-count .total{color:rgba(255,255,255,.5)}
+.deck-hint{position:fixed;bottom:26px;right:28px;color:rgba(255,255,255,.4);font:11px/1 ui-monospace,monospace;letter-spacing:.2em;text-transform:uppercase;z-index:999;pointer-events:none;display:none}
+@media print{@page{size:1920px 1080px;margin:0}html,body{width:1920px!important;height:auto!important;overflow:visible!important;background:#fff!important}.deck-shell{position:static!important;display:block!important;inset:auto!important}.deck-stage{width:1920px!important;height:auto!important;transform:none!important;box-shadow:none!important;position:static!important}.slide{display:flex!important;position:relative!important;inset:auto!important;width:1920px!important;height:1080px!important;page-break-after:always;break-after:page}.slide:last-child{page-break-after:auto;break-after:auto}.deck-counter,.deck-hint{display:none!important}}
+</style>
+<style>
+.canvas{width:1920px;height:1080px;padding:90px 120px;display:flex;flex-direction:column;justify-content:center;position:relative;font-family:var(--font-body)}
+.kicker{font-family:var(--font-mono);font-size:22px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin-bottom:24px}
+.kicker.dk{color:oklch(78% 0.16 155)}
+h1.hero{font-family:var(--font-display);font-size:132px;line-height:1.05;letter-spacing:-.02em;font-weight:700}
+h2.t{font-family:var(--font-display);font-size:72px;line-height:1.1;letter-spacing:-.02em;font-weight:700}
+.sub{font-size:32px;line-height:1.45;color:var(--muted);max-width:56ch;margin-top:24px}
+.slide.dark{background:var(--darkbg);color:var(--darkfg)}
+.slide.dark .canvas{color:var(--darkfg)}
+.slide.dark .sub{color:var(--darkmuted)}
+.pill{display:inline-flex;align-items:center;gap:12px;font-family:var(--font-mono);font-size:22px;letter-spacing:.1em;text-transform:uppercase;border:1px solid var(--border);border-radius:999px;padding:12px 28px;background:var(--surface);color:var(--muted);margin-bottom:28px}
+.slide.dark .pill{background:rgba(255,255,255,.06);border-color:rgba(255,255,255,.14);color:var(--darkmuted)}
+.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:36px;margin-top:52px}
+.card{background:var(--surface);border:1.5px solid var(--border);border-radius:24px;padding:44px 40px}
+.slide.dark .card{background:rgba(255,255,255,.05);border-color:rgba(255,255,255,.12)}
+.card h3{font-size:34px;letter-spacing:-.01em;margin-bottom:14px}
+.card p{font-size:26px;line-height:1.5;color:var(--muted)}
+.slide.dark .card p{color:var(--darkmuted)}
+.card .num{font-family:var(--font-mono);font-size:24px;color:var(--accent);letter-spacing:.1em;margin-bottom:16px;display:block}
+.code{background:#0d1117;color:#e6edf3;border-radius:20px;padding:40px 48px;font-family:var(--font-mono);font-size:30px;line-height:1.7;margin-top:40px}
+.code .c{color:#8b949e}.code .g{color:#7ee787}
+.bigstat{font-family:var(--font-display);font-size:200px;font-weight:700;letter-spacing:-.03em;line-height:1;color:var(--accent)}
+.foot{position:absolute;bottom:56px;left:120px;right:120px;display:flex;justify-content:space-between;font-family:var(--font-mono);font-size:20px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.slide.dark .foot{color:var(--darkmuted)}
+.split{display:grid;grid-template-columns:1.1fr .9fr;gap:60px;margin-top:44px;align-items:start}
+ul.ticks{list-style:none;margin-top:36px;display:flex;flex-direction:column;gap:22px}
+ul.ticks li{font-size:31px;line-height:1.45;padding-left:56px;position:relative}
+ul.ticks li::before{content:"▸";position:absolute;left:0;color:var(--accent);font-weight:700}
+a{color:var(--accent)}
+.note{font-family:var(--font-mono);font-size:20px;color:var(--muted);letter-spacing:.04em}
+.step{display:flex;gap:28px;align-items:flex-start;background:var(--surface);border:1.5px solid var(--border);border-radius:18px;padding:28px 34px}
+.step b{font-family:var(--font-mono);font-size:26px;color:var(--surface);background:var(--accent);border-radius:12px;min-width:56px;height:56px;display:grid;place-items:center}
+.step p{font-size:27px;line-height:1.45}.step code{font-family:var(--font-mono);background:oklch(94% 0.01 250);padding:4px 12px;border-radius:8px;font-size:24px}
+.cta{display:inline-flex;margin-top:44px;background:var(--accent);color:#fff;font-size:30px;font-weight:600;padding:22px 54px;border-radius:999px;letter-spacing:.02em;text-decoration:none}
+.cta:hover{filter:brightness(.92)}
+.cta:focus-visible{outline:4px solid oklch(58% 0.16 145 / .4);outline-offset:3px}
+</style>
+</head>
+<body>
+<div class="deck-shell"><div class="deck-stage" id="deck-stage">
+
+<section class="slide active" data-screen-label="01 Cover"><div class="canvas" data-od-id="cover">
+<div class="pill" data-od-id="cover-pill">ALGORYTHM · IIT BHILAI · 12 SEPT 2026 · ED1 203/204</div>
+<div class="kicker" data-od-id="cover-kicker">Welcome to Session 1 · 2026</div>
+<h1 class="hero" data-od-id="cover-title">Welcome to<br/>ALGORYTHM.</h1>
+<p class="sub" data-od-id="cover-sub">The tech club of IIT Bhilai — seniors and juniors exploring tech together. Tonight: map + demos + first step + game. 45-min talk, then 45-min CTF. No setup needed.</p>
+<div class="foot"><span>7 PM · ED1 203/204</span><span>01 / Talk + Hands-on</span></div>
+</div></section>
+
+<section class="slide" data-screen-label="02 Agenda"><div class="canvas" data-od-id="agenda">
+<div class="kicker" data-od-id="agenda-kick">Tonight's run-of-show</div>
+<h2 class="t" data-od-id="agenda-title">Four moves in 45 minutes.</h2>
+<div class="grid3">
+<div class="card" data-od-id="agenda-card-map"><span class="num">01 / MAP</span><h3>Why tech + where to look</h3><p>Leverage, optionality, fun — and the feeds that keep you current.</p></div>
+<div class="card" data-od-id="agenda-card-proof"><span class="num">02 / PROOF</span><h3>What tech can do</h3><p>GSoC, attendance app, MIDI looper — explored by students like you.</p></div>
+<div class="card" data-od-id="agenda-card-play"><span class="num">03 / PLAY</span><h3>Homework + CTF</h3><p>Bio page tonight. Then flag-hunting on images for 45 min.</p></div>
+</div>
+<div class="foot"><span>45-min talk → 45-min CTF</span><span>02</span></div>
+</div></section>
+
+<section class="slide dark" data-screen-label="03 Why Tech"><div class="canvas" data-od-id="why-tech">
+<div class="kicker dk" data-od-id="whytech-kick">01 · Why tech?</div>
+<h2 class="t" data-od-id="whytech-title">Build once. Used by thousands.</h2>
+<ul class="ticks">
+<li data-od-id="whytech-leverage"><b>Leverage</b> — Proximity attendance app: you'll use it within days.</li>
+<li data-od-id="whytech-option"><b>Optionality</b> — GSoC, internships, research, startups. Proof beats marks.</li>
+<li data-od-id="whytech-fun"><b>Fun</b> — phone becomes a MIDI looper. ₹0 vs ₹15,000–50,000 hardware.</li>
+</ul>
+<div class="foot"><span>Rule for the AI era: use it — but be good enough to catch it</span><span>03</span></div>
+</div></section>
+
+<section class="slide" data-screen-label="04 Why Algorythm"><div class="canvas" data-od-id="why-algo">
+<div class="kicker" data-od-id="whyalgo-kick">02 · Why Algorythm</div>
+<h2 class="t" data-od-id="whyalgo-title">Seniors and juniors learning tech together.</h2>
+<div class="split">
+<div><ul class="ticks">
+<li data-od-id="whyalgo-cadence">Weekly sessions + small homework + CTFs + showcases.</li>
+<li data-od-id="whyalgo-vote">You voted the roadmap: CTF Mgmt (5) › Showcase (4) › Newsfeed (2) › Homework (1).</li>
+<li data-od-id="whyalgo-today">Today is not mastery. It's map + proof + first step + game.</li>
+</ul></div>
+<div class="card" data-od-id="whyalgo-poll"><span class="num">POLL / ROADMAP</span><h3>What you asked for</h3><p>CTF █████ 5<br/>Showcase ████ 4<br/>Newsfeed ██ 2<br/>Homework █ 1</p></div>
+</div>
+<div class="foot"><span>Mission: increase tech culture</span><span>04</span></div>
+</div></section>
+
+<section class="slide" data-screen-label="05 Stay Updated"><div class="canvas" data-od-id="feeds">
+<div class="kicker" data-od-id="feeds-kick">03 · Where to stay updated</div>
+<h2 class="t" data-od-id="feeds-title">Subscribe later. Remember this.</h2>
+<div class="grid3">
+<div class="card" data-od-id="feed-card-video"><span class="num">WATCH</span><h3>Fireship · 3Blue1Brown · Two-Minute Papers · LTT</h3><p>Fast news, deep intuition, research wow, hardware fun.</p></div>
+<div class="card" data-od-id="feed-card-track"><span class="num">TRACK</span><h3>Artificial Analysis + OpenRouter</h3><p>Which model is best — and free API keys to try them.</p></div>
+<div class="card" data-od-id="feed-card-trivia"><span class="num">PROOF</span><h3>GLM 5.3 was free for 10 days</h3><p>If you knew, you used it free. The feed <i>is</i> the edge.</p></div>
+</div>
+<p class="sub" data-od-id="feeds-rule">Rule: docs first, then build.</p>
+<div class="foot"><span>Trivia > lecture</span><span>05</span></div>
+</div></section>
+
+<section class="slide dark" data-screen-label="06 Showcase"><div class="canvas" data-od-id="showcase">
+<div class="kicker dk" data-od-id="show-kick">04 · Demos — explored here</div>
+<h2 class="t" data-od-id="show-title">Cool stuff tech can do.</h2>
+<div class="grid3">
+<div class="card" data-od-id="show-card-mixxx"><span class="num">GSOC 2026</span><h3>Mixxx — Master Track ID</h3><p>Full Chromaprint fingerprint. 3rd-year → GSoC is real.</p></div>
+<div class="card" data-od-id="show-card-prox"><span class="num">CAMPUS</span><h3>Proximity Attendance</h3><p>BLE + crypto + offline-first rounds. You'll tap it soon.</p></div>
+<div class="card" data-od-id="show-card-loop"><span class="num">MUSIC</span><h3>TouchLooper</h3><p>4-track MIDI looper on a phone. 40+ signals, 5 tabs, ₹0 rig.</p></div>
+</div>
+<div class="foot"><span>2–3 min each · links only if internet works</span><span>06</span></div>
+</div></section>
+
+<section class="slide" data-screen-label="07 AI Memory"><div class="canvas" data-od-id="ai-memory">
+<div class="kicker" data-od-id="ai-kick">Demo · 2 min</div>
+<h2 class="t" data-od-id="ai-title">AI has no memory. It re-reads.</h2>
+<div class="split">
+<div><ul class="ticks">
+<li data-od-id="ai-p1">Open <b>proximity-modular-core.json</b> — full prompt pasted every turn.</li>
+<li data-od-id="ai-p2">That session log: <b>~975k input tokens.</b> Smart context wins.</li>
+<li data-od-id="ai-p3">Lesson: prompt engineering = context engineering.</li>
+</ul></div>
+<div class="code" data-od-id="ai-code">info.title: "Proximity:<br/>&nbsp;&nbsp;Modular Core"<br/>messages[0].parts[0].text<br/><span class="c">// full prompt, every turn</span><br/><span class="g">~975k tokens in →</span></div>
+</div>
+<div class="foot"><span>Use AI — but catch it when wrong</span><span>07</span></div>
+</div></section>
+
+<section class="slide" data-screen-label="08 Git Started"><div class="canvas" data-od-id="git">
+<div class="kicker" data-od-id="git-kick">05 · Get started: GitHub + LinkedIn + Git</div>
+<h2 class="t" data-od-id="git-title">GitHub is proof. LinkedIn is story.</h2>
+<div class="code" data-od-id="git-code"><span class="c">$ live — your first bio page</span><br/>git status<br/>git add index.html<br/>git commit -m <span class="g">"my first bio page"</span><br/>git log --oneline</div>
+<p class="sub" data-od-id="git-sub">Git = time machine + collaboration. You need it to submit homework.</p>
+<div class="foot"><span>Teaser next session: Why CP?</span><span>08</span></div>
+</div></section>
+
+<section class="slide dark" data-screen-label="09 Homework"><div class="canvas" data-od-id="homework">
+<div class="kicker dk" data-od-id="hw-kick">Tonight in the hostel · zero-setup in hall</div>
+<h2 class="t" data-od-id="hw-title">Homework: make your bio page.</h2>
+<ul class="ticks">
+<li data-od-id="hw-1">Create GitHub + LinkedIn profiles.</li>
+<li data-od-id="hw-2">Build a small HTML bio + links, add CSS, add your cool tech stuff.</li>
+<li data-od-id="hw-3">Submit to the repo link dropping in the WhatsApp group. Best pages on stage next session.</li>
+</ul>
+<a class="cta" href="#" data-od-id="hw-cta">Do it tonight → get featured</a>
+<div class="foot"><span>Research phase — explore!</span><span>09</span></div>
+</div></section>
+
+<section class="slide" data-screen-label="10 CTF Intro"><div class="canvas" data-od-id="ctf-intro">
+<div class="kicker" data-od-id="ctf-kick">06 · CTF — glamour first</div>
+<h2 class="t" data-od-id="ctf-title">A .png can lie.</h2>
+<div class="split">
+<div class="card" data-od-id="ctf-flag"><span class="num">GAME</span><h3>Find flag{…}, score points</h3><p>Today: stego / images only. 45-min hands-on next.</p></div>
+<div><ul class="ticks">
+<li data-od-id="ctf-l1">Extension can hide the real type.</li>
+<li data-od-id="ctf-l2">Metadata hides flags — tEXt / iTXt / ExIF.</li>
+<li data-od-id="ctf-l3">Bytes after IEND are ignored by viewers, not by us.</li>
+<li data-od-id="ctf-l4">Pixels hide bits in LSB you can't see.</li>
+</ul></div>
+</div>
+<div class="foot"><span>Hype only — workflow next</span><span>10</span></div>
+</div></section>
+
+<section class="slide" data-screen-label="11 CTF Workflow"><div class="canvas" data-od-id="ctf-flow">
+<div class="kicker" data-od-id="flow-kick">Bridge · what we do next 45 min</div>
+<h2 class="t" data-od-id="flow-title">The workflow, in order.</h2>
+<div style="display:flex;flex-direction:column;gap:20px;margin-top:36px">
+<div class="step" data-od-id="flow-step-1"><b>1</b><p><b>Identify</b> — <code>file image.png</code> · <code>exiftool image.png</code> · <code>strings image.png | less</code></p></div>
+<div class="step" data-od-id="flow-step-2"><b>2</b><p><b>PNG chunks</b> — IHDR → tEXt/iTXt → IDAT → IEND. Check after IEND.</p></div>
+<div class="step" data-od-id="flow-step-3"><b>3</b><p><b>Embedded files</b> — <code>binwalk image.png</code> · <code>binwalk -e</code> · <code>foremost</code>. Repeat on anything extracted.</p></div>
+<div class="step" data-od-id="flow-step-4"><b>4</b><p><b>Pixels</b> — RGB 0–255, LSB, bit-planes 0–7. Live in StegOnline, no install. Then <code>zsteg · steghide</code> if needed.</p></div>
+</div>
+<div class="foot"><span>Keep ready: laptop + browser + sample image.png · no Kali needed</span><span>11</span></div>
+</div></section>
+
+<section class="slide dark" data-screen-label="12 Whats Next"><div class="canvas" data-od-id="next">
+<div class="kicker dk" data-od-id="next-kick">Thank you · Q&A → CTF block now</div>
+<h2 class="t" data-od-id="next-title" style="font-size:110px">Map ✓&nbsp; Proof ✓<br/>Step ✓&nbsp; Game →</h2>
+<p class="sub" data-od-id="next-sub" style="color:var(--darkmuted)">Doubts in the WhatsApp group. Homework repo link drops there. Next: CP teaser + best bio pages + deeper dive.</p>
+<p class="note" data-od-id="speaker-notes" style="margin-top:28px;color:var(--darkmuted)">Speaker notes: recap 3 min · total talk 45 min · hand off to CTF team.</p>
+<div class="foot"><span>See you in the CTF block</span><span>12</span></div>
+</div></section>
+
+</div></div>
+<nav class="deck-counter" role="navigation" aria-label="Deck navigation"><button type="button" id="deck-prev" aria-label="Previous slide">‹</button><span class="deck-count"><span id="deck-cur">01</span> <span class="total">/ <span id="deck-total">01</span></span></span><button type="button" id="deck-next" aria-label="Next slide">›</button></nav>
+<div class="deck-hint">← / → · space · R reset</div>
+<script>(function(){var stage=document.getElementById('deck-stage');var slides=Array.prototype.slice.call(document.querySelectorAll('.slide'));var prev=document.getElementById('deck-prev');var next=document.getElementById('deck-next');var cur=document.getElementById('deck-cur');var total=document.getElementById('deck-total');var STORE='deck:idx:'+(location.pathname||'/');var idx=0;function fit(){var sw=window.innerWidth;var sh=window.innerHeight;var pad=32;var s=Math.min((sw-pad)/1920,(sh-pad)/1080);if(!isFinite(s)||s<=0)s=1;var tx=(sw-1920*s)/2;var ty=(sh-1080*s)/2;stage.style.transform='translate('+tx+'px,'+ty+'px) scale('+s+')'}function pad2(n){return(n<10?'0':'')+n}function paint(){slides.forEach(function(el,i){el.classList.toggle('active',i===idx)});if(cur)cur.textContent=pad2(idx+1);if(total)total.textContent=pad2(slides.length);if(prev)prev.toggleAttribute('disabled',idx<=0);if(next)next.toggleAttribute('disabled',idx>=slides.length-1);postDeckState()}function go(i){idx=Math.max(0,Math.min(slides.length-1,i));paint();try{localStorage.setItem(STORE,String(idx))}catch(_){}}var OD_DECK_PROTOCOL_VERSION=1;function postDeckState(){try{window.parent.postMessage({type:'od:slide-state',protocolVersion:OD_DECK_PROTOCOL_VERSION,active:idx,count:slides.length},'*')}catch(_){}}function announceDeckProtocol(){try{window.parent.postMessage({type:'od:deck-ready',protocolVersion:OD_DECK_PROTOCOL_VERSION,capabilities:["absolute-navigation","state-events"]},'*')}catch(_){}}window.addEventListener('message',function(event){var data=event&&event.data;if(!data||data.type!=='od:slide')return;if(data.protocolVersion!=null&&data.protocolVersion!==OD_DECK_PROTOCOL_VERSION)return;var target=idx;if(data.action==='go'){if(typeof data.index!=='number'||!isFinite(data.index))return;target=Math.floor(data.index)}else if(data.action==='next')target=idx+1;else if(data.action==='prev')target=idx-1;else if(data.action==='first')target=0;else if(data.action==='last')target=slides.length-1;else return;go(target)});function onKey(e){if(e.__odDeckKeyHandled)return;var t=e.target;if(t&&(t.tagName==='INPUT'||t.tagName==='TEXTAREA'||t.isContentEditable))return;if(e.metaKey||e.ctrlKey||e.altKey||e.shiftKey)return;if(e.key==='ArrowRight'||e.key==='PageDown'||e.key===' '){e.__odDeckKeyHandled=true;e.preventDefault();go(idx+1)}else if(e.key==='ArrowLeft'||e.key==='PageUp'){e.__odDeckKeyHandled=true;e.preventDefault();go(idx-1)}else if(e.key==='Home'||String(e.key).toLowerCase()==='r'){e.__odDeckKeyHandled=true;e.preventDefault();go(0)}else if(e.key==='End'){e.__odDeckKeyHandled=true;e.preventDefault();go(idx-1)}}window.addEventListener('keydown',onKey,true);document.addEventListener('keydown',onKey,true);if(prev)prev.addEventListener('click',function(){go(idx-1)});if(next)next.addEventListener('click',function(){go(idx+1)});document.addEventListener('click',function(e){if(e.defaultPrevented)return;if(e.button!==undefined&&e.button!==0)return;if(e.metaKey||e.ctrlKey||e.altKey||e.shiftKey)return;var t=e.target;while(t&&t!==document.body&&t!==document.documentElement){var tag=String(t.tagName||'').toUpperCase();if(tag==='A'||tag==='BUTTON'||tag==='INPUT'||tag==='TEXTAREA'||tag==='SELECT'||t.isContentEditable||t.getAttribute('role')==='button'||t.getAttribute('role')==='link')return;t=t.parentElement}focusDeck();if(e.clientX<window.innerWidth/2)go(idx-1);else go(idx+1)},true);document.body.setAttribute('tabindex','-1');document.body.style.outline='none';function focusDeck(){try{window.focus();document.body.focus({preventScroll:true})}catch(_){}}document.addEventListener('mousedown',focusDeck);window.addEventListener('load',focusDeck);try{var saved=parseInt(localStorage.getItem(STORE)||'0',10);if(!isNaN(saved)&&saved>=0&&saved<slides.length)idx=saved}catch(_){}window.addEventListener('resize',fit);announceDeckProtocol();fit();paint();focusDeck()})();</script>
+</body></html>

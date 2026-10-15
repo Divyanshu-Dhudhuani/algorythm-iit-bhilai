@@ -1,0 +1,19 @@
+So we learned about how git works and why is needed.
+
+Try to do the conflict we did in class yourself to understand how things work.
+
+Make your own bio page
+Make it beautiful
+Use git and and its features for commits and version management
+
+We will share a main repo where you will have to make Pull requests to submit your bio page.
+
+Hope You found the session useful
+Feel free to ask doubts (genuine) to any of us
+(Do some AI and gpt research also to solve doubts :)
+
+
+Keep exploring...
+Happy Holidays ..
+Happy Navratri.. 
+Happy Durga Puja...

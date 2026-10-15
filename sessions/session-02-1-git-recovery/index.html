@@ -1,0 +1,623 @@
+<!doctype html>
+<html lang="en" data-od-deck-protocol="1">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>ALGORYTHM Session 2.1 — Git Recovery + Your Own Agent | IIT Bhilai</title>
+<style>
+:root{
+--bg: oklch(98% 0.005 250);
+--surface: oklch(100% 0 0);
+--fg: oklch(22% 0.02 240);
+--muted: oklch(50% 0.018 240);
+--border: oklch(90% 0.008 240);
+--accent: oklch(58% 0.16 145);
+--font-display: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', system-ui, sans-serif;
+--font-body: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', system-ui, sans-serif;
+--font-mono: 'JetBrains Mono', 'IBM Plex Mono', ui-monospace, Menlo, monospace;
+--shell: #08090d;
+--darkbg: oklch(20% 0.02 250);
+--darkfg: oklch(96% 0.005 250);
+--darkmuted: oklch(72% 0.02 250);
+--danger: oklch(60% 0.18 25);
+--warn: oklch(65% 0.14 70);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{width:100%;height:100%;overflow:hidden;background:var(--shell);color:var(--fg);font:18px/1.5 -apple-system,system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+.deck-shell{position:fixed;inset:0;overflow:hidden}
+.deck-stage{width:1920px;height:1080px;background:var(--bg);position:relative;transform-origin:top left;box-shadow:0 30px 80px rgba(0,0,0,.35)}
+.slide{position:absolute;inset:0;overflow:hidden}
+.slide:not(.active){display:none!important}
+:where(.slide.active){display:flex;flex-direction:column}
+.deck-counter{position:fixed;bottom:22px;left:50%;transform:translateX(-50%);display:none;align-items:center;gap:4px;background:rgba(10,14,26,.92);padding:6px;border-radius:999px;border:1px solid rgba(255,255,255,.08);color:#fff;font:12px/1 ui-monospace,Menlo,monospace;letter-spacing:.18em;z-index:1000}
+.deck-counter button{width:36px;height:36px;background:transparent;color:#fff;border:0;border-radius:50%;font-size:18px;cursor:pointer;display:grid;place-items:center}
+.deck-counter .deck-count{padding:0 14px;letter-spacing:.22em}
+.deck-counter .deck-count .total{color:rgba(255,255,255,.5)}
+.deck-hint{position:fixed;bottom:26px;right:28px;color:rgba(255,255,255,.4);font:11px/1 ui-monospace,monospace;letter-spacing:.2em;text-transform:uppercase;z-index:999;pointer-events:none;display:none}
+@media print{@page{size:1920px 1080px;margin:0}html,body{width:1920px!important;height:auto!important;overflow:visible!important;background:#fff!important}.deck-shell{position:static!important;display:block!important;inset:auto!important}.deck-stage{width:1920px!important;height:auto!important;transform:none!important;box-shadow:none!important;position:static!important}.slide,.slide:not(.active){display:flex!important;position:relative!important;inset:auto!important;width:1920px!important;height:1080px!important;page-break-after:always;break-after:page}.slide:last-child{page-break-after:auto;break-after:auto}.deck-counter,.deck-hint{display:none!important}}
+</style>
+<style>
+.canvas{width:1920px;height:1080px;padding:90px 120px;display:flex;flex-direction:column;justify-content:center;position:relative;font-family:var(--font-body)}
+.kicker{font-family:var(--font-mono);font-size:22px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin-bottom:24px}
+.kicker.dk{color:oklch(78% 0.16 155)}
+h1.hero{font-family:var(--font-display);font-size:128px;line-height:1.05;letter-spacing:-.02em;font-weight:700}
+h2.t{font-family:var(--font-display);font-size:70px;line-height:1.1;letter-spacing:-.02em;font-weight:700}
+h2.t.sm{font-size:60px}
+.sub{font-size:31px;line-height:1.45;color:var(--muted);max-width:58ch;margin-top:24px}
+.slide.dark{background:var(--darkbg);color:var(--darkfg)}
+.slide.dark .canvas{color:var(--darkfg)}
+.slide.dark .sub{color:var(--darkmuted)}
+.pill{display:inline-flex;align-items:center;gap:12px;font-family:var(--font-mono);font-size:22px;letter-spacing:.1em;text-transform:uppercase;border:1px solid var(--border);border-radius:999px;padding:12px 28px;background:var(--surface);color:var(--muted);margin-bottom:28px}
+.slide.dark .pill{background:rgba(255,255,255,.06);border-color:rgba(255,255,255,.14);color:var(--darkmuted)}
+.live{display:inline-flex;align-items:center;gap:10px;font-family:var(--font-mono);font-size:20px;letter-spacing:.12em;text-transform:uppercase;background:oklch(60% 0.18 25);color:#fff;border-radius:999px;padding:10px 24px;margin-bottom:24px}
+.live::before{content:"";width:12px;height:12px;border-radius:50%;background:#fff;animation:blink 1.2s infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.25}}
+.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:36px;margin-top:52px}
+.grid4{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:28px;margin-top:48px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:36px;margin-top:48px}
+.card{background:var(--surface);border:1.5px solid var(--border);border-radius:24px;padding:40px 38px}
+.slide.dark .card{background:rgba(255,255,255,.05);border-color:rgba(255,255,255,.12)}
+.card h3{font-size:33px;letter-spacing:-.01em;margin-bottom:12px}
+.card p{font-size:25px;line-height:1.5;color:var(--muted)}
+.slide.dark .card p{color:var(--darkmuted)}
+.card .num{font-family:var(--font-mono);font-size:23px;color:var(--accent);letter-spacing:.1em;margin-bottom:14px;display:block}
+.card code{font-family:var(--font-mono);background:oklch(94% 0.01 250);padding:3px 12px;border-radius:8px;font-size:22px;color:var(--fg)}
+.slide.dark .card code{background:rgba(255,255,255,.1);color:var(--darkfg)}
+.code{background:#0d1117;color:#e6edf3;border-radius:20px;padding:36px 44px;font-family:var(--font-mono);font-size:28px;line-height:1.7;margin-top:36px}
+.code .c{color:#8b949e}.code .g{color:#7ee787}.code .y{color:#e3b341}
+.foot{position:absolute;bottom:52px;left:120px;right:120px;display:flex;justify-content:space-between;font-family:var(--font-mono);font-size:20px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.slide.dark .foot{color:var(--darkmuted)}
+.split{display:grid;grid-template-columns:1.1fr .9fr;gap:60px;margin-top:40px;align-items:start}
+ul.ticks{list-style:none;margin-top:32px;display:flex;flex-direction:column;gap:20px}
+ul.ticks li{font-size:30px;line-height:1.45;padding-left:56px;position:relative}
+ul.ticks li::before{content:"▸";position:absolute;left:0;color:var(--accent);font-weight:700}
+ul.ticks li code, p code, .sub code{font-family:var(--font-mono);background:oklch(94% 0.01 250);padding:3px 12px;border-radius:8px;font-size:24px;color:var(--fg)}
+.slide.dark ul.ticks li code{color:var(--darkfg);background:rgba(255,255,255,.1)}
+a{color:var(--accent)}
+.note{font-family:var(--font-mono);font-size:20px;color:var(--muted);letter-spacing:.04em}
+.slide.dark .note{color:var(--darkmuted)}
+.step{display:flex;gap:28px;align-items:flex-start;background:var(--surface);border:1.5px solid var(--border);border-radius:18px;padding:26px 32px}
+.step b{font-family:var(--font-mono);font-size:26px;color:var(--surface);background:var(--accent);border-radius:12px;min-width:56px;height:56px;display:grid;place-items:center}
+.step p{font-size:27px;line-height:1.45}.step code{font-family:var(--font-mono);background:oklch(94% 0.01 250);padding:4px 12px;border-radius:8px;font-size:24px}
+.cta{display:inline-flex;margin-top:40px;background:var(--accent);color:#fff;font-size:30px;font-weight:600;padding:22px 54px;border-radius:999px;letter-spacing:.02em;text-decoration:none}
+.layers{display:grid;grid-template-columns:1fr auto 1fr auto 1fr auto 1fr;gap:0;margin-top:48px;align-items:stretch}
+.layer{background:var(--surface);border:1.5px solid var(--border);border-radius:24px;padding:32px 28px;text-align:center}
+.slide.dark .layer{background:rgba(255,255,255,.05);border-color:rgba(255,255,255,.12)}
+.layer .ln{font-family:var(--font-mono);font-size:20px;letter-spacing:.1em;color:var(--accent);text-transform:uppercase;display:block;margin-bottom:10px}
+.layer h3{font-size:30px;margin-bottom:10px}
+.layer p{font-size:22px;color:var(--muted);line-height:1.5}
+.slide.dark .layer p{color:var(--darkmuted)}
+.layer code{font-family:var(--font-mono);font-size:20px;background:oklch(94% 0.01 250);padding:2px 10px;border-radius:8px}
+.slide.dark .layer code{background:rgba(255,255,255,.1);color:var(--darkfg)}
+.arrow{display:grid;place-items:center;font-family:var(--font-mono);font-size:22px;color:var(--accent);padding:0 14px;text-align:center}
+.arrow small{display:block;font-size:18px;color:var(--muted)}
+.branchbox{background:var(--surface);border:1.5px solid var(--border);border-radius:20px;padding:32px 40px;margin-top:40px;font-family:var(--font-mono);font-size:26px;line-height:2}
+.branchbox .m{color:var(--accent);font-weight:700}.branchbox .f{color:#0969da;font-weight:700}.branchbox .c{color:var(--muted)}
+.danger{border:1.5px solid oklch(60% 0.18 25 / 45%);background:oklch(60% 0.18 25 / 8%);border-radius:18px;padding:24px 32px;margin-top:32px;font-size:26px}
+.danger b{color:var(--danger)}
+.keymenu{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:28px;margin-top:44px}
+.keymenu .card .tag{font-family:var(--font-mono);font-size:20px;letter-spacing:.08em;text-transform:uppercase;display:inline-block;padding:6px 18px;border-radius:999px;margin-bottom:14px}
+.tag.rec{background:oklch(58% 0.16 145 / 14%);color:var(--accent);border:1px solid oklch(58% 0.16 145 / 45%)}
+.tag.alt{background:oklch(94% 0.01 250);color:var(--muted);border:1px solid var(--border)}
+.bigstat{font-family:var(--font-display);font-size:180px;font-weight:700;letter-spacing:-.03em;line-height:1;color:var(--accent)}
+</style>
+</head>
+<body>
+<div class="deck-shell"><div class="deck-stage" id="deck-stage">
+
+<!-- 01 COVER -->
+<section class="slide active" data-screen-label="01 Cover"><div class="canvas">
+<div class="pill">ALGORYTHM · IIT BHILAI · SESSION 2.1 · 15 OCT 2026 · L202</div>
+<div class="kicker">Git recovery · Browser login · Live conflict fix · Your own agent · CTF</div>
+<h1 class="hero">Git + your<br/>own agent.</h1>
+<p class="sub">Last time half of us got stuck on login. Today we fix everyone to green — browser login, two connect paths, live merge conflict — then make an AI edit your page and push it back. 3:30 help desk, 4 PM main session.</p>
+<div class="foot"><span>Fix-it Git · Agents LIVE · CTF</span><span>01 / 37</span></div>
+</div></section>
+
+<!-- 02 AGENDA -->
+<section class="slide" data-screen-label="02 Agenda"><div class="canvas">
+<div class="kicker">Tonight's run-of-show</div>
+<h2 class="t">Three blocks. All hands-on.</h2>
+<div class="grid3">
+<div class="card"><span class="num">PART 1 / GIT FIX-IT</span><h3>Everyone to green</h3><p>Browser login (no tokens), Path A online → connect, Path B init → push, clone → branch → live conflict fix.</p></div>
+<div class="card"><span class="num">PART 2 / AGENT · LIVE</span><h3>Your own agent edits your page</h3><p>VS Code + Kilo Code extension, give it context, free Gemini key, push the upgrade.</p></div>
+<div class="card"><span class="num">PART 3 / CTF</span><h3>Flag-hunting continues</h3><p>Jagath takes over. Stego round 2 — same workflow, harder images.</p></div>
+</div>
+<div class="foot"><span>Follow along on your laptop — every block has a try-it moment</span><span>02 / 37</span></div>
+</div></section>
+
+<!-- 03 LOGISTICS -->
+<section class="slide" data-screen-label="03 Setup checklist"><div class="canvas">
+<div class="kicker">Before we start — 2 minutes</div>
+<h2 class="t sm">If any box is unticked, fix it now.</h2>
+<div class="grid4">
+<div class="card"><span class="num">☐ 1</span><h3>Laptop + charger</h3><p>You will type in every block. No spectators tonight.</p></div>
+<div class="card"><span class="num">☐ 2</span><h3>VS Code installed</h3><p>code.visualstudio.com — any OS. Open it once before 4 PM.</p></div>
+<div class="card"><span class="num">☐ 3</span><h3>GitHub account</h3><p>github.com/signup. Note your username — you will push with it.</p></div>
+<div class="card"><span class="num">☐ 4</span><h3>Stuck? 3:30 desk</h3><p>Come at 3:30 to L202. We help with install + login. Main show 4 PM.</p></div>
+</div>
+<div class="foot"><span>Help desk 3:30 PM · Main session 4:00 PM · L202</span><span>03 / 37</span></div>
+</div></section>
+
+<!-- 04 RECAP -->
+<section class="slide dark" data-screen-label="04 Recap S1"><div class="canvas">
+<div class="kicker dk">Session 1 → Session 2.1</div>
+<h2 class="t">You shipped a bio page. Now version it.</h2>
+<ul class="ticks">
+<li>Session 1 homework: <code>index.html</code> bio + links + CSS, pushed with <code>git add · commit · push</code>.</li>
+<li>Last session half the batch got stuck on auth — today we fix that first, then continue.</li>
+<li>Tonight's upgrade: proper Git moves <i>plus</i> an agent that edits that same page with you.</li>
+</ul>
+<p class="note" style="margin-top:28px">Speaker cue: show 2–3 best bio pages, 1 min each. Then: "every change from tonight = one commit".</p>
+<div class="foot"><span>Proof (GitHub) + story (LinkedIn) — from last session</span><span>04 / 37</span></div>
+</div></section>
+
+<!-- 05 TERMINAL BASICS -->
+<section class="slide" data-screen-label="05 Terminal basics"><div class="canvas">
+<div class="kicker">Terminal basics · 2 minutes — then we start</div>
+<h2 class="t sm">Lost in terminal? Three commands fix that.</h2>
+<div class="grid3">
+<div class="card"><span class="num">WHERE AM I?</span><h3><code>pwd</code></h3><p>Prints your current folder's full path. Run it whenever you feel lost.</p></div>
+<div class="card"><span class="num">WHAT'S HERE?</span><h3><code>ls</code></h3><p>Lists files in this folder. <code>ls -a</code> also shows hidden ones like <code>.git</code>.</p></div>
+<div class="card"><span class="num">GO THERE</span><h3><code>cd</code></h3><p><code>cd &lt;folder&gt;</code> moves in. <code>cd ..</code> goes up one. Tab completes names — use it.</p></div>
+</div>
+<div class="code" style="font-size:24px"><span class="c">$ try all three right now</span><br/>pwd <span class="c"># → /Users/&lt;username&gt;/bio — you are here</span><br/>ls <span class="c"># → index.html … these are your files</span><br/>cd bio <span class="c"># → step into bio, pwd again to confirm</span></div>
+<div class="foot"><span>pwd = where · ls = what · cd = go — Git assumes you know these</span><span>05 / 37</span></div>
+</div></section>
+
+<!-- 05 LAYERS -->
+<section class="slide dark" data-screen-label="06 Four layers"><div class="canvas">
+<div class="kicker dk">Part 1 · the mental model — read this once, Git clicks forever</div>
+<h2 class="t sm">Four layers. Three moves between them.</h2>
+<div class="layers">
+<div class="layer"><span class="ln">Layer 1 · Machine</span><h3>Working files</h3><p>Your edits.<br/><code>git status</code> sees them</p></div>
+<div class="arrow">─▸<small>add</small></div>
+<div class="layer"><span class="ln">Layer 2 · On device</span><h3>Staged + history</h3><p><code>commit · rebase</code><br/><code>git log</code> lives here</p></div>
+<div class="arrow">─▸<small>push / pull</small></div>
+<div class="layer"><span class="ln">Layer 3 · Yours online</span><h3>Your GitHub repo</h3><p><code>git push</code> sends<br/><code>git pull</code> fetches</p></div>
+<div class="arrow">─▸<small>fork / PR</small></div>
+<div class="layer"><span class="ln">Layer 4 · Theirs online</span><h3>Someone else's repo</h3><p>Fork it, PR it,<br/>merge it back</p></div>
+</div>
+<div class="foot"><span>Layers 1–2 never leave your laptop · Layers 3–4 are GitHub</span><span>06 / 37</span></div>
+</div></section>
+
+<!-- 06 THE LOOP -->
+<section class="slide" data-screen-label="07 The loop"><div class="canvas">
+<div class="live">Live · type with us</div>
+<h2 class="t sm">One loop runs the whole night.</h2>
+<div class="split">
+<div class="code"><span class="c">$ clone once, loop forever</span><br/>git clone &lt;url&gt;<br/>git status<br/>git add index.html<br/>git commit -m <span class="g">"describe the change"</span><br/>git push<br/>git pull <span class="c"># before you start</span></div>
+<div><ul class="ticks">
+<li><code>clone</code> once — copies Layer 3/4 down to your machine.</li>
+<li>Loop daily: <code>status → add → commit → push</code>.</li>
+<li><code>pull</code> first when collaborating — avoids half your conflicts.</li>
+</ul></div>
+</div>
+<div class="foot"><span>Clone is download + history · Pull is update + merge</span><span>07 / 37</span></div>
+</div></section>
+
+<!-- 07 CHEAT SHEET -->
+<section class="slide" data-screen-label="08 Cheat sheet"><div class="canvas">
+<div class="kicker">Part 1 · keep this photo on your phone</div>
+<h2 class="t sm">The only 8 commands tonight.</h2>
+<div class="grid4">
+<div class="card"><span class="num">SEE</span><h3><code>status · log · diff</code></h3><p>What changed, what shipped, line-by-line how.</p></div>
+<div class="card"><span class="num">SAVE</span><h3><code>add · commit</code></h3><p>Stage files, freeze a snapshot with a message.</p></div>
+<div class="card"><span class="num">SYNC</span><h3><code>clone · push · pull</code></h3><p>Copy down, send up, merge down.</p></div>
+<div class="card"><span class="num">SPLIT</span><h3><code>branch · checkout</code></h3><p>Parallel timelines. Break things safely.</p></div>
+</div>
+<p class="note" style="margin-top:26px">Full sheet: git-scm.com/docs + GitHub Skills. Tonight we demo each one live — no mugging up.</p>
+<div class="foot"><span>Screenshot this slide</span><span>08 / 37</span></div>
+</div></section>
+
+<!-- 08 BRANCHES -->
+<section class="slide" data-screen-label="09 Branches"><div class="canvas">
+<div class="kicker">Part 1 · branches — the idea that makes teams possible</div>
+<h2 class="t sm">main stays safe. You play on a branch.</h2>
+<div class="split">
+<div class="branchbox"><span class="c">$ experiment without fear</span><br/>git branch redesign<br/>git checkout redesign <span class="c"># or: git checkout -b redesign</span><br/><span class="m">●──●──● main</span> <span class="c">(safe, deployable)</span><br/><span class="f">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;╰──●──● redesign</span> <span class="c">(your playground)</span><br/>git checkout main → git merge redesign</div>
+<div><ul class="ticks">
+<li>A branch is just a movable label on a commit.</li>
+<li>Rule: never demo-broken code on <code>main</code>.</li>
+<li>Merge = join your playground back into <code>main</code>.</li>
+</ul></div>
+</div>
+<div class="foot"><span>Branch per feature · merge when it works</span><span>09 / 37</span></div>
+</div></section>
+
+<!-- 09 CLONE + DIFF -->
+<section class="slide" data-screen-label="10 Clone diff"><div class="canvas">
+<div class="live">Live · try it</div>
+<h2 class="t sm"><code>clone</code> + <code>diff</code>: look before you leap.</h2>
+<div class="grid2">
+<div class="code" style="font-size:26px"><span class="c">$ copy any repo down</span><br/>git clone https://github.com/&lt;username&gt;/&lt;reponame&gt;.git<br/>cd &lt;reponame&gt;<br/>git status <span class="c"># what changed?</span><br/>git diff <span class="c"># exact lines changed</span><br/>git log --oneline <span class="c"># what shipped?</span></div>
+<div class="card"><span class="num">READ THE DIFF LIKE THIS</span><h3><code>-</code> removed · <code>+</code> added</h3><p>Red lines left your file, green lines entered. If the diff surprises you, don't <code>add</code> yet. <code>diff</code> is your pre-commit review.</p></div>
+</div>
+<div class="foot"><span>Status = overview · Diff = details · Log = history</span><span>10 / 37</span></div>
+</div></section>
+
+<!-- 10 RESET -->
+<section class="slide" data-screen-label="11 Reset"><div class="canvas">
+<div class="kicker">Part 1 · undo — three levels of "oops"</div>
+<h2 class="t sm">Undo small. Rarely nuke.</h2>
+<div class="grid3">
+<div class="card"><span class="num">SOFT UNDO</span><h3><code>git restore file</code></h3><p>Discard edits in one file. File goes back to last commit. Safe.</p></div>
+<div class="card"><span class="num">UNSTAGE</span><h3><code>git reset file</code></h3><p>Un-<code>add</code> a file. Edits stay, staging undone. Very safe.</p></div>
+<div class="card"><span class="num">☠ NUKE</span><h3><code>git reset --hard</code></h3><p>Erase ALL uncommitted work. No undo. Demo it once, fear it forever.</p></div>
+</div>
+<div class="danger"><b>Golden rule:</b> <code>--hard</code> destroys work permanently. Commit first (<code>git commit -m "wip"</code>), then experiment — you can always come back.</div>
+<div class="foot"><span>Restore = discard edits · Reset = unstage · --hard = erase</span><span>11 / 37</span></div>
+</div></section>
+
+<!-- 11 PRs -->
+<section class="slide dark" data-screen-label="12 PRs"><div class="canvas">
+<div class="kicker dk">Part 1 · how the open-source world collaborates</div>
+<h2 class="t sm">You never push to their repo. You PR it.</h2>
+<div class="grid4">
+<div class="card"><span class="num">1</span><h3>Fork</h3><p>Copy their repo (Layer 4) to your account (Layer 3). One click on GitHub.</p></div>
+<div class="card"><span class="num">2</span><h3>Clone + branch</h3><p><code>clone</code> your fork, make a branch, commit the fix.</p></div>
+<div class="card"><span class="num">3</span><h3>Push + PR</h3><p><code>push</code> branch, click "Compare &amp; pull request". Describe <i>why</i>.</p></div>
+<div class="card"><span class="num">4</span><h3>Merge</h3><p>Maintainer reviews, approves, merges. Your commit lands upstream.</p></div>
+</div>
+<p class="sub">Homework repos, GSoC, internships — every contribution you will ever make follows these 4 steps.</p>
+<div class="foot"><span>Fork → branch → push → pull request → merge</span><span>12 / 37</span></div>
+</div></section>
+
+<!-- 12 CONFLICTS THEORY -->
+<section class="slide" data-screen-label="13 Conflicts theory"><div class="canvas">
+<div class="kicker">Part 1 · theory — 1 min, then we do it live</div>
+<h2 class="t sm">Conflicts aren't errors. They're Git asking you.</h2>
+<div class="split">
+<div class="code" style="font-size:25px"><span class="c"># Git marks the fight — you pick the winner</span><br/>&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD<br/>background: navy; <span class="c"># yours</span><br/>=======<br/>background: teal; <span class="c"># theirs</span><br/>&gt;&gt;&gt;&gt;&gt;&gt;&gt; redesign<br/><span class="c">$ then:</span> edit → git add → git commit</div>
+<div><ul class="ticks">
+<li><b>Why:</b> same lines changed in two places. Git can't guess — so it asks.</li>
+<li><b>Fix:</b> open the file, delete markers, keep what looks right.</li>
+<li><b>Finish:</b> <code>add + commit</code>. Conflict resolved, history clean.</li>
+</ul></div>
+</div>
+<div class="foot"><span>Pull often · commit small · conflicts stay tiny</span><span>13 / 37</span></div>
+</div></section>
+
+<!-- 13 RECOVERY DIVIDER -->
+<section class="slide dark" data-screen-label="14 Recovery divider"><div class="canvas" style="align-items:center;text-align:center">
+<div class="pill">FIX-IT BLOCK · ~20 MIN · EVERYONE TO GREEN</div>
+<h1 class="hero">Half-done?<br/>Let's finish it.</h1>
+<p class="sub" style="margin-inline:auto">Some pushed last time. Some hit <code>Author identity unknown</code> or a login wall. We fix both live — then break a merge on purpose so you never fear one again.</p>
+<div class="foot"><span>Diagnosis → login → Path A / Path B → conflict fix</span><span>14 / 37</span></div>
+</div></section>
+
+<!-- 14 DIAGNOSIS -->
+<section class="slide" data-screen-label="15 Diagnosis"><div class="canvas">
+<div class="live">Live · 30 seconds — find your group</div>
+<h2 class="t sm">Which group are you in?</h2>
+<div class="grid2">
+<div class="card"><span class="num">GROUP A · ALREADY GREEN ✓</span><h3><code>push</code> worked before</h3><p>Run <code>git status</code> — clean? You skip to clone + conflict demo. Help your neighbour.</p></div>
+<div class="card"><span class="num">GROUP B · STUCK ✕</span><h3>Hit config or login error</h3><p><code>Author identity unknown</code>? Browser never opened? Follow the next 2 slides exactly.</p></div>
+</div>
+<div class="code" style="font-size:25px"><span class="c">$ 3 checks — paste all three</span><br/>git --version <span class="c"># must print 2.x</span><br/>git config --global user.name <span class="c"># blank = Group B, do slide 15</span><br/>git remote -v <span class="c"># no origin? do slide 17 / 18</span></div>
+<div class="foot"><span>Blank name = config missing · No origin = not linked yet</span><span>15 / 37</span></div>
+</div></section>
+
+<!-- 15 WHO ARE YOU -->
+<section class="slide" data-screen-label="16 Who are you"><div class="canvas">
+<div class="live">Live · fix 1 — first commit error</div>
+<h2 class="t sm">First <code>commit</code> asks: who are you?</h2>
+<div class="split">
+<div class="code" style="font-size:24px"><span class="c">$ what you saw last time</span><br/>git commit -m <span class="g">"first bio"</span><br/><span class="y">Author identity unknown → failed</span><br/><span class="c">$ fix once per laptop</span><br/>git config --global user.name <span class="g">"Swarnadip Kar"</span><br/>git config --global user.email <span class="g">"&lt;email&gt;"</span><br/>git config --global init.defaultBranch main<br/>git commit -m <span class="g">"first bio"</span> <span class="c"># now works ✓</span></div>
+<div><ul class="ticks">
+<li><code>user.name</code> = <code>"Swarnadip Kar"</code>. Stamped on every commit.</li>
+<li><code>user.email</code> = <code>&lt;email&gt;</code>. Links commits to <code>&lt;username&gt;</code>.</li>
+<li><code>init.defaultBranch main</code> = never see <code>master</code> warning again.</li>
+</ul></div>
+</div>
+<div class="foot"><span>Verify: git config --global --list · --global = once per laptop</span><span>16 / 37</span></div>
+</div></section>
+
+<!-- 16 BROWSER LOGIN -->
+<section class="slide dark" data-screen-label="17 Browser login"><div class="canvas">
+<div class="kicker dk">Fix 2 · no tokens — 2026 default</div>
+<h2 class="t sm">First <code>push</code> opens a browser. That's it.</h2>
+<div class="split">
+<div class="code" style="font-size:24px"><span class="c">$ first push from any folder</span><br/>git push -u origin main<br/><span class="c">→ browser opens automatically:</span><br/><span class="g">Authorize GitCredentialManager?</span> → Allow<br/><span class="c">$ back in terminal:</span><br/>Writing objects… <span class="g">done ✓</span><br/>git credential.helper <span class="c"># saved — no repeat</span></div>
+<div><ul class="ticks">
+<li><code>-u</code> = remember: <code>main</code> tracks <code>origin/main</code>. Next time just <code>git push</code>.</li>
+<li>No token pasting. HTTPS + Credential Manager does OAuth for you.</li>
+<li>Browser didn't open? Copy the device code from terminal → paste at github.com/login/device.</li>
+</ul></div>
+</div>
+<div class="foot"><span>Allow in browser once · cached till you sign out</span><span>17 / 37</span></div>
+</div></section>
+
+<!-- 17 PATH A -->
+<section class="slide" data-screen-label="18 Path A"><div class="canvas">
+<div class="live">Live · Path A — online first (easiest)</div>
+<h2 class="t sm">Create online → paste 3 lines.</h2>
+<div class="split" style="grid-template-columns:1.3fr .7fr">
+<div class="code" style="font-size:22px;overflow-wrap:normal;word-break:keep-all"><span class="c">$ github.com → New repo → name: &lt;reponame&gt; → Create</span><br/><span class="c"># then GitHub shows "...or push an existing repo":</span><br/>git remote add origin https://github.com/&lt;username&gt;/&lt;reponame&gt;.git<br/>git branch -M main<br/>git push -u origin main</div>
+<div><ul class="ticks">
+<li><code>remote add origin</code> = save GitHub's address under name <code>origin</code>. Once.</li>
+<li><code>branch -M main</code> = rename current branch to <code>main</code>. Matches GitHub.</li>
+<li><code>push -u origin main</code> = send + remember. Triggers browser login once.</li>
+</ul></div>
+</div>
+<p class="note" style="margin-top:24px">Speaker: create repo with NO README for this path. Show the copy button on GitHub. Check: <code>git remote -v</code> must show your URL.</p>
+<div class="foot"><span>Path A = you already have files · GitHub gives you the link</span><span>18 / 37</span></div>
+</div></section>
+
+<!-- 18 PATH B -->
+<section class="slide" data-screen-label="19 Path B"><div class="canvas">
+<div class="live">Live · Path B — local first</div>
+<h2 class="t sm"><code>init</code> here → link → push.</h2>
+<div class="split" style="grid-template-columns:1.3fr .7fr">
+<div class="code" style="font-size:22px;overflow-wrap:normal;word-break:keep-all"><span class="c">$ in your project folder</span><br/>git init -b main <span class="c"># start history on main</span><br/>git add index.html <span class="c"># stage</span><br/>git commit -m <span class="g">"first bio page"</span> <span class="c"># snapshot</span><br/>git remote add origin https://github.com/&lt;username&gt;/&lt;reponame&gt;.git<br/>git push -u origin main <span class="c"># browser → done ✓</span></div>
+<div><ul class="ticks">
+<li><code>init -b main</code> = create <code>.git</code> folder. History starts here.</li>
+<li><code>add + commit</code> = you must snapshot <i>before</i> first push. Empty push fails.</li>
+<li>Same last 2 lines as Path A — both paths converge here.</li>
+</ul></div>
+</div>
+<div class="foot"><span>init once · remote once · -u once — then just push</span><span>19 / 37</span></div>
+</div></section>
+
+<!-- 19 REMOTE -->
+<section class="slide" data-screen-label="20 Remote"><div class="canvas">
+<div class="kicker">Concept · the line everyone pastes but nobody explains</div>
+<h2 class="t sm"><code>remote</code> is an address book. <code>origin</code> is a nickname.</h2>
+<div class="split" style="grid-template-columns:1.3fr .7fr">
+<div class="code" style="font-size:21px;overflow-wrap:normal;word-break:keep-all"><span class="c">$ nicknames for URLs — each line below is ONE command</span><br/>git remote -v <span class="c"># list: must show fetch + push</span><br/>git remote add origin https://github.com/&lt;username&gt;/&lt;reponame&gt;.git <span class="c"># save once</span><br/>git remote set-url origin https://github.com/&lt;username&gt;/&lt;reponame&gt;.git <span class="c"># fix URL</span><br/>git remote rename origin myfork <span class="c"># rarely needed</span><br/>git remote remove origin <span class="c"># unlink only, files stay</span></div>
+<div><ul class="ticks">
+<li><code>origin</code> = default nickname for your GitHub repo. Not magic, just a shortcut.</li>
+<li><code>upstream</code> = what your branch tracks: <code>main → origin/main</code>. Set once with <code>push -u</code>.</li>
+<li><code>-u</code> = <code>--set-upstream</code>. After that, bare <code>push</code> / <code>pull</code> know where to go.</li>
+</ul></div>
+</div>
+<p class="note" style="margin-top:24px">Speaker: run <code>git remote -v</code> live — empty = you skipped Path A/B. <code>set-url</code> fixes a pasted wrong URL without re-adding.</p>
+<div class="foot"><span>origin = nickname · upstream = tracking · -u links them</span><span>20 / 37</span></div>
+</div></section>
+
+<!-- 20 BRANCH COMMANDS -->
+<section class="slide" data-screen-label="21 Branch commands"><div class="canvas">
+<div class="kicker">Concept + commands · keep this photo</div>
+<h2 class="t sm">Branches: one idea, six commands.</h2>
+<div class="split">
+<div class="code" style="font-size:23px"><span class="c">$ local vs tracked</span><br/>git branch <span class="c"># list local, * = current</span><br/>git branch -a <span class="c"># + remote-tracking: origin/main</span><br/>git checkout -b redesign <span class="c"># create + switch (classic)</span><br/>git switch -c redesign <span class="c"># create + switch (new)</span><br/>git switch main <span class="c"># just switch</span><br/>git push -u origin redesign <span class="c"># publish + track</span><br/>git branch -d redesign <span class="c"># delete merged (-D = force)</span></div>
+<div><ul class="ticks">
+<li>Local <code>redesign</code> = your work. <code>origin/redesign</code> = GitHub's copy you track.</li>
+<li>Flow: <code>checkout -b</code> (or <code>switch -c</code>) → work → <code>push -u</code> once → <code>-d</code> to clean up.</li>
+<li>Lost? <code>git branch --show-current</code> tells you where you are.</li>
+</ul></div>
+</div>
+<div class="foot"><span>Local branch · tracking branch · GitHub branch</span><span>21 / 37</span></div>
+</div></section>
+
+<!-- 19 CLONE PULL -->
+<section class="slide" data-screen-label="22 Clone pull"><div class="canvas">
+<div class="live">Live · second copy</div>
+<h2 class="t sm"><code>clone</code> it again. <code>pull</code> before work.</h2>
+<div class="grid2">
+<div class="code" style="font-size:24px"><span class="c">$ new folder / friend's laptop</span><br/>git clone https://github.com/&lt;username&gt;/&lt;reponame&gt;.git<br/>cd &lt;reponame&gt;<br/>git pull origin main <span class="c"># update + merge</span><br/>git log --oneline <span class="c"># same history ✓</span></div>
+<div class="card"><span class="num">WHY BOTH?</span><h3><code>clone</code> once · <code>pull</code> always</h3><p><code>clone</code> = full copy + history, first time only. <code>pull</code> = fetch + merge latest before you edit. Pull-first avoids half your conflicts.</p></div>
+</div>
+<div class="foot"><span>Clone = download + history · Pull = update + merge</span><span>22 / 37</span></div>
+</div></section>
+
+<!-- 20 CONFLICT SETUP -->
+<section class="slide" data-screen-label="23 Conflict setup"><div class="canvas">
+<div class="live">Live · we break it — step 1 of 3</div>
+<h2 class="t sm">Branch off. Edit. Hold the push.</h2>
+<div style="display:flex;flex-direction:column;gap:20px;margin-top:36px">
+<div class="step"><b>1</b><p><code>git checkout -b redesign</code> — new playground. Confirm with <code>git branch</code>.</p></div>
+<div class="step"><b>2</b><p>Edit line 10 in <code>index.html</code> → <code>background: teal;</code> → <code>git add index.html</code> → <code>git commit -m "redesign: teal hero"</code>. Do NOT push yet.</p></div>
+<div class="step"><b>3</b><p>Stay on <code>redesign</code>. Hands off keyboard — we move <code>main</code> next.</p></div>
+</div>
+<p class="note" style="margin-top:24px">Speaker: everyone edits the SAME line — that's what forces the conflict. Show <code>git log --oneline</code>: redesign is 1 ahead.</p>
+<div class="foot"><span>Same line on two branches = guaranteed conflict</span><span>23 / 37</span></div>
+</div></section>
+
+<!-- 21 BREAK MAIN -->
+<section class="slide dark" data-screen-label="24 Break main"><div class="canvas">
+<div class="kicker dk">Live · step 2 of 3 — move main forward</div>
+<h2 class="t sm">Change <code>main</code>. Push it. Now they fight.</h2>
+<div class="split">
+<div class="code" style="font-size:24px"><span class="c">$ same file, different answer</span><br/>git checkout main<br/><span class="c"># edit SAME line 10 →</span> background: navy;<br/>git add index.html<br/>git commit -m <span class="g">"main: navy hero"</span><br/>git push <span class="c"># main now ahead on GitHub ✓</span><br/>git checkout redesign<br/>git push -u origin redesign <span class="c"># or: merge → ! rejected</span></div>
+<div><ul class="ticks">
+<li>You changed the <b>same line</b> two ways: <code>teal</code> vs <code>navy</code>.</li>
+<li><code>main</code> pushed first, so <code>redesign</code> is now behind + diverged.</li>
+<li>Next: <code>git pull origin main</code> (or merge) → Git stops and asks you.</li>
+</ul></div>
+</div>
+<div class="foot"><span>Two answers, one line — Git can't guess, so it asks</span><span>24 / 37</span></div>
+</div></section>
+
+<!-- 22 FIX -->
+<section class="slide" data-screen-label="25 Fix conflict"><div class="canvas">
+<div class="live">Live · step 3 of 3 — the 30-sec fix</div>
+<h2 class="t sm">Delete markers. Keep the winner. Push.</h2>
+<div class="split">
+<div class="code" style="font-size:23px"><span class="c"># Git marks the fight in index.html</span><br/>&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD <span class="c"># main: navy</span><br/>background: navy;<br/>=======<br/>background: teal; <span class="c"># redesign</span><br/>&gt;&gt;&gt;&gt;&gt;&gt;&gt; redesign<br/><span class="c">$ fix — 3 moves:</span><br/>git add index.html <span class="c"># after editing</span><br/>git commit -m <span class="g">"merge redesign: keep teal"</span><br/>git push</div>
+<div><ul class="ticks">
+<li><b>1 · Edit:</b> open file, delete <code>&lt;&lt;&lt; === &gt;&gt;&gt;</code>, keep one colour (or mix).</li>
+<li><b>VS Code tip:</b> click <i>Accept Current / Incoming / Both</i> above the markers.</li>
+<li><b>2 · 3 · Done:</b> <code>add + commit + push</code>. Conflict over, history clean.</li>
+</ul></div>
+</div>
+<div class="foot"><span>Edit → add → commit → push — the only fix you'll ever need</span><span>25 / 37</span></div>
+</div></section>
+
+<!-- 23 DONE CHECK -->
+<section class="slide" data-screen-label="26 Done check"><div class="canvas">
+<div class="kicker">Checkpoint — are you green?</div>
+<h2 class="t sm">Clean tree + graph = done.</h2>
+<div class="grid2">
+<div class="code" style="font-size:24px"><span class="c">$ everyone runs this</span><br/>git status <span class="c"># must say: working tree clean ✓</span><br/>git log --oneline --graph --all <span class="c"># see merge ✓</span><br/>git pull <span class="c"># Already up to date ✓</span></div>
+<div class="card"><span class="num">STILL RED?</span><h3>Raise your hand now</h3><p><code>rejected</code> → you forgot <code>pull</code>. <code>no origin</code> → redo slide 17/18. <code>identity unknown</code> → redo slide 15. Fix-it desk stays open.</p></div>
+</div>
+<div class="foot"><span>Refresh github.com — your merge commit must be there</span><span>26 / 37</span></div>
+</div></section>
+
+<!-- 24 TOKEN FALLBACK -->
+<section class="slide dark" data-screen-label="27 Token fallback"><div class="canvas">
+<div class="kicker dk">Fallback only · you shouldn't need this in 2026</div>
+<h2 class="t sm">Browser failed? Tokens still work.</h2>
+<div class="grid4">
+<div class="card"><span class="num">1</span><h3>Create token</h3><p>Settings → Developer settings → Fine-grained tokens → Generate. Read + write on your repo. Copy once.</p></div>
+<div class="card"><span class="num">2</span><h3>Push normal</h3><p><code>git push</code>. Git prompts for login.</p></div>
+<div class="card"><span class="num">3</span><h3>Paste token</h3><p>Username = GitHub username. Password = token, <i>not</i> your password.</p></div>
+<div class="card"><span class="num">4</span><h3>Stays saved</h3><p>Keychain / Credential Manager remembers it. No prompt? <code>git config --global credential.helper store</code>.</p></div>
+</div>
+<p class="note" style="margin-top:26px">Try browser login (slide 16) first. Use this only on lab PCs where the browser pop-up is blocked. Next step when ready: SSH keys.</p>
+<div class="foot"><span>Fallback only · browser login is the default</span><span>27 / 37</span></div>
+</div></section>
+
+<!-- 25 PART 2 DIVIDER -->
+<section class="slide dark" data-screen-label="28 Part 2 divider"><div class="canvas" style="align-items:center;text-align:center">
+<div class="pill">PART 2 · THE MAIN EVENT · LIVE</div>
+<h1 class="hero">Your own agent,<br/>editing live.</h1>
+<p class="sub" style="margin-inline:auto">Same bio page from Session 1. This time you won't hand-write every line — you'll direct an agent that does. Watch, then do it on your laptop.</p>
+<div class="foot"><span>VS Code → Kilo Code → free key → edit → push</span><span>28 / 37</span></div>
+</div></section>
+
+<!-- 26 EXTENSIONS -->
+<section class="slide" data-screen-label="29 Extensions"><div class="canvas">
+<div class="kicker">Part 2 · step 1 — the editor becomes an agent</div>
+<h2 class="t sm">An extension = superpower you install.</h2>
+<div class="grid3">
+<div class="card"><span class="num">WHAT</span><h3>Extensions add skills</h3><p>Themes, languages, AI agents — VS Code is plain until you extend it. Extensions live in the left sidebar's square icon.</p></div>
+<div class="card"><span class="num">INSTALL</span><h3>Kilo Code in 30 sec</h3><p>Extensions (<code>Ctrl/Cmd+Shift+X</code>) → search <code>Kilo Code</code> → Install → pin it to the sidebar.</p></div>
+<div class="card"><span class="num">OTHERS EXIST</span><h3>Kilo is one example</h3><p>Cline, Roo, Copilot, <b>OpenCode</b> (terminal-first) — same idea, different shell. Learn one deeply; switching is easy.</p></div>
+</div>
+<div class="foot"><span>Install Kilo Code now — we wait 60 seconds</span><span>29 / 37</span></div>
+</div></section>
+
+<!-- 27 KILO CLI -->
+<section class="slide" data-screen-label="30 Kilo CLI"><div class="canvas">
+<div class="kicker">Part 2 · step 2 — same agent, inside your terminal</div>
+<h2 class="t sm">Sidebar for clicks. CLI for speed.</h2>
+<div class="split">
+<div class="code"><span class="c">$ the agent, in your terminal</span><br/>npm install -g @kilo/cli <span class="c"># or: brew install kilo</span><br/>kilo <span class="c"># opens agent in this repo</span><br/>/add index.html <span class="c"># attach context</span></div>
+<div><ul class="ticks">
+<li>Kilo <b>extension</b> = buttons + chat beside your code. Start here.</li>
+<li>Kilo <b>CLI</b> = same brain in the terminal. Same keys, scriptable.</li>
+<li>Prefer terminals? Try <b>OpenCode</b> the same way. Concepts transfer.</li>
+</ul></div>
+</div>
+<div class="foot"><span>Extension today · CLI when you're comfortable</span><span>30 / 37</span></div>
+</div></section>
+
+<!-- 28 CONTEXT -->
+<section class="slide dark" data-screen-label="31 Context"><div class="canvas">
+<div class="kicker dk">Part 2 · the skill that decides everything — recap from Session 1</div>
+<h2 class="t sm">AI has no memory. Context is your job.</h2>
+<div class="split">
+<div><ul class="ticks">
+<li>Remember <code>proximity-modular-core.json</code>? ~975k tokens re-read every turn. Same with your agent.</li>
+<li>Tag files: <code>@index.html</code> <code>@style.css</code> — never say "my page", show it.</li>
+<li>One task per prompt. Small ask → review → next ask. Be the director, not the typist.</li>
+</ul></div>
+<div class="code"><span class="c"># vague (bad)</span><br/>"make it nice"<br/><span class="c"># directed (good)</span><br/>"@index.html @style.css:<br/>make hero responsive,<br/>keep green accent,<br/>no new deps" <span class="g">✓</span></div>
+</div>
+<div class="foot"><span>Prompt engineering = context engineering</span><span>31 / 37</span></div>
+</div></section>
+
+<!-- 29 DEMO SCRIPT -->
+<section class="slide" data-screen-label="32 Demo script"><div class="canvas">
+<div class="live">Live · the 5-minute upgrade — do it with us</div>
+<h2 class="t sm">Three prompts. Watch your page grow.</h2>
+<div style="display:flex;flex-direction:column;gap:20px;margin-top:36px">
+<div class="step"><b>1</b><p><code>@index.html</code> — "Add a responsive hero with my name, one-line bio, and my GitHub + LinkedIn links. Keep it single-file."</p></div>
+<div class="step"><b>2</b><p><code>@index.html @style.css</code> — "Move styles to style.css, add dark section + green accent like the ALGORYTHM slides, mobile-friendly."</p></div>
+<div class="step"><b>3</b><p>"Add <code>data.json</code> with my name + interests, and render it into the page with vanilla JS. Explain each change."</p></div>
+</div>
+<p class="note" style="margin-top:24px">Speaker: run prompt 1 fully, review the diff in VS Code, accept, then prompt 2. Always show the diff before accepting.</p>
+<div class="foot"><span>Review every diff before you accept — you are the author</span><span>32 / 37</span></div>
+</div></section>
+
+<!-- 30 API KEYS -->
+<section class="slide" data-screen-label="33 API keys"><div class="canvas">
+<div class="live">Live · free key in 2 minutes</div>
+<h2 class="t sm">Agents need a key. Gemini is the easiest free one.</h2>
+<div class="split">
+<div><ul class="ticks">
+<li><b>Get it:</b> open <a href="https://aistudio.google.com/apikey">aistudio.google.com/apikey</a> → Get API Key → Create → copy once.</li>
+<li><b>Use it:</b> Kilo Code settings → paste key → pick a Gemini model.</li>
+<li><b>Protect it:</b> keys live in <code>.env</code>, and <code>.env</code> lives in <code>.gitignore</code>. Leaked it? Revoke + regenerate immediately.</li>
+</ul></div>
+<div class="code" style="font-size:25px"><span class="c"># never commit secrets</span><br/>echo ".env" &gt;&gt; .gitignore<br/>cat .gitignore <span class="c"># confirm .env listed</span><br/>git status <span class="c"># .env must NOT appear</span></div>
+</div>
+<div class="foot"><span>A key is a password — never push it, never screenshot it</span><span>33 / 37</span></div>
+</div></section>
+
+<!-- 31 MODEL MENU -->
+<section class="slide dark" data-screen-label="34 Model menu"><div class="canvas">
+<div class="kicker dk">Part 2 · one key to start — any key when you grow</div>
+<h2 class="t sm">Start with Gemini. Judge the rest yourself.</h2>
+<div class="keymenu">
+<div class="card"><span class="tag rec">★ Start here</span><h3>Gemini</h3><p>Google AI Studio free key. Generous, easy, good for homework edits.</p></div>
+<div class="card"><span class="tag alt">Fast</span><h3>Groq</h3><p>Very fast inference free tier. Great when you iterate a lot.</p></div>
+<div class="card"><span class="tag alt">Many</span><h3>OpenRouter :free</h3><p>One key, many <code>:free</code> models. Continuation of Session 1.</p></div>
+<div class="card"><span class="tag alt">Zero-setup</span><h3>Kilo built-in</h3><p>Trial credits in Kilo itself. Fine for tonight, quota ends.</p></div>
+</div>
+<p class="sub">Don't trust hype — compare on <b><a href="https://artificialanalysis.ai/">Artificial Analysis</a></b> (quality / speed / price leaderboards) and OpenRouter, then pick free + good over best + paid.</p>
+<div class="foot"><span><a href="https://artificialanalysis.ai/">artificialanalysis.ai</a> · openrouter.ai — the feed is the edge</span><span>34 / 37</span></div>
+</div></section>
+
+<!-- 32 PUSH IT -->
+<section class="slide" data-screen-label="35 Push it"><div class="canvas">
+<div class="live">Live · close the loop</div>
+<h2 class="t sm">Agent edited it. Now ship it.</h2>
+<div class="split">
+<div class="code"><span class="c">$ the loop, again — with agent help</span><br/>git status <span class="c"># review what agent changed</span><br/>git diff <span class="c"># read it, don't blind-accept</span><br/>git add index.html style.css data.json<br/>git commit -m <span class="g">"agent: responsive hero + data.json"</span><br/>git push</div>
+<div><ul class="ticks">
+<li>Every agent change = one commit with a clear message.</li>
+<li><code>.env</code> must never appear in <code>status</code>. If it does, stop.</li>
+<li>Refresh your GitHub repo — your upgraded page is proof of work.</li>
+</ul></div>
+</div>
+<div class="foot"><span>Status → diff → add → commit → push — every time</span><span>35 / 37</span></div>
+</div></section>
+
+<!-- 33 ROADMAP -->
+<section class="slide" data-screen-label="36 Roadmap"><div class="canvas">
+<div class="kicker">Hungry? Don't wander — follow a path</div>
+<h2 class="t sm">One roadmap beats ten tutorials.</h2>
+<div class="grid3">
+<div class="card"><span class="num">PATH</span><h3>roadmap.sh</h3><p>Frontend → Backend → Git → DevOps, in order. Pick ONE track this month. (Thanks Bhargav for the find.)</p></div>
+<div class="card"><span class="num">RULE</span><h3>Docs first, then build</h3><p>Official docs + one small project beat 20 bookmarked videos. Stuck 15 min → ask in the group.</p></div>
+<div class="card"><span class="num">HABIT</span><h3>One video a day</h3><p>Fireship for breadth, 3Blue1Brown for depth, Two-Minute Papers for wonder — from Session 1.</p></div>
+</div>
+<div class="foot"><span>roadmap.sh — pick a track, walk it daily</span><span>36 / 37</span></div>
+</div></section>
+
+<!-- 34 CTF + CLOSE -->
+<section class="slide dark" data-screen-label="37 CTF handoff"><div class="canvas">
+<div class="kicker dk">Part 3 · handoff — Jagath takes the stage → then homework</div>
+<h2 class="t" style="font-size:96px">Map ✓&nbsp; Ship ✓<br/>Game →</h2>
+<ul class="ticks">
+<li>CTF round 2 with Jagath — same workflow as Session 1 (<code>file · exiftool · strings · binwalk · LSB</code>), harder images.</li>
+<li><b>Homework:</b> agent-upgrade your bio page, push ≥2 commits, drop the repo link in the WhatsApp group. Best pages on stage next session.</li>
+<li>Doubts → WhatsApp group. Fill the feedback form — it shapes Session 3.</li>
+</ul>
+<p class="note" style="margin-top:24px">Speaker notes: recap 2 min (login → Path A/B → conflict fix → agent → push), hand mic to Jagath. Total talk ~70–80 min + CTF block.</p>
+<div class="foot"><span>See you in the CTF block — laptops open</span><span>37 / 37</span></div>
+</div></section>
+
+</div></div>
+<nav class="deck-counter" role="navigation" aria-label="Deck navigation"><button type="button" id="deck-prev" aria-label="Previous slide">‹</button><span class="deck-count"><span id="deck-cur">01</span> <span class="total">/ <span id="deck-total">01</span></span></span><button type="button" id="deck-next" aria-label="Next slide">›</button></nav>
+<div class="deck-hint">← / → · space · R reset</div>
+<script>
+(function(){var stage=document.getElementById('deck-stage');var slides=Array.prototype.slice.call(document.querySelectorAll('.slide'));var prev=document.getElementById('deck-prev');var next=document.getElementById('deck-next');var cur=document.getElementById('deck-cur');var total=document.getElementById('deck-total');var STORE='deck:idx:'+(location.pathname||'/');var idx=0;
+function fit(){var sw=window.innerWidth,sh=window.innerHeight,pad=32;var s=Math.min((sw-pad)/1920,(sh-pad)/1080);if(!isFinite(s)||s<=0)s=1;var tx=(sw-1920*s)/2,ty=(sh-1080*s)/2;stage.style.transform='translate('+tx+'px,'+ty+'px) scale('+s+')';}
+function pad2(n){return(n<10?'0':'')+n;}
+function paint(){slides.forEach(function(el,i){el.classList.toggle('active',i===idx);});if(cur)cur.textContent=pad2(idx+1);if(total)total.textContent=pad2(slides.length);if(prev)prev.toggleAttribute('disabled',idx<=0);if(next)next.toggleAttribute('disabled',idx>=slides.length-1);try{window.parent.postMessage({type:'od:slide-state',protocolVersion:1,active:idx,count:slides.length},'*');}catch(_){}}
+function go(i){idx=Math.max(0,Math.min(slides.length-1,i));paint();try{localStorage.setItem(STORE,String(idx));}catch(_){}}
+window.addEventListener('message',function(e){var d=e&&e.data;if(!d||d.type!=='od:slide')return;var t=idx;if(d.action==='go'){if(typeof d.index!=='number')return;t=Math.floor(d.index);}else if(d.action==='next')t=idx+1;else if(d.action==='prev')t=idx-1;else if(d.action==='first')t=0;else if(d.action==='last')t=slides.length-1;else return;go(t);});
+function onKey(e){if(e.__odDeckKeyHandled)return;var t=e.target;if(t&&(t.tagName==='INPUT'||t.tagName==='TEXTAREA'||t.isContentEditable))return;if(e.metaKey||e.ctrlKey||e.altKey||e.shiftKey)return;if(e.key==='ArrowRight'||e.key==='PageDown'||e.key===' '){e.__odDeckKeyHandled=true;e.preventDefault();go(idx+1);}else if(e.key==='ArrowLeft'||e.key==='PageUp'){e.__odDeckKeyHandled=true;e.preventDefault();go(idx-1);}else if(e.key==='Home'||String(e.key).toLowerCase()==='r'){e.__odDeckKeyHandled=true;e.preventDefault();go(0);}else if(e.key==='End'){e.__odDeckKeyHandled=true;e.preventDefault();go(slides.length-1);}}
+window.addEventListener('keydown',onKey,true);document.addEventListener('keydown',onKey,true);
+if(prev)prev.addEventListener('click',function(){go(idx-1);});if(next)next.addEventListener('click',function(){go(idx+1);});
+document.addEventListener('click',function(e){if(e.defaultPrevented)return;if(e.button!==undefined&&e.button!==0)return;if(e.metaKey||e.ctrlKey||e.altKey||e.shiftKey)return;var t=e.target;while(t&&t!==document.body&&t!==document.documentElement){var tag=String(t.tagName||'').toUpperCase();if(tag==='A'||tag==='BUTTON'||tag==='INPUT'||tag==='TEXTAREA'||tag==='SELECT'||t.isContentEditable||t.getAttribute('role')==='button')return;t=t.parentElement;}try{window.focus();document.body.focus({preventScroll:true});}catch(_){}if(e.clientX<window.innerWidth/2)go(idx-1);else go(idx+1);},true);
+document.body.setAttribute('tabindex','-1');document.body.style.outline='none';
+try{var s=parseInt(localStorage.getItem(STORE)||'0',10);if(!isNaN(s)&&s>=0&&s<slides.length)idx=s;}catch(_){}
+window.addEventListener('resize',fit);try{window.parent.postMessage({type:'od:deck-ready',protocolVersion:1,capabilities:["absolute-navigation","state-events"]},'*');}catch(_){}fit();paint();})();
+</script>
+</body>
+</html>

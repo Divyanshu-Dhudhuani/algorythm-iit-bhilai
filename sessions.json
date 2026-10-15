@@ -1,0 +1,41 @@
+[
+  {
+    "id": "session-01-intro-explore",
+    "title": "Session 1 — Intro + Explore",
+    "date": "12 September 2026",
+    "description": "First actual session. HTML basics, your bio page homework, JSON primer, explore roadmap.",
+    "deck": "sessions/session-01-intro-explore/index.html",
+    "files": [
+      { "label": "Main deck", "href": "sessions/session-01-intro-explore/index.html" },
+      { "label": "First git push guide", "href": "sessions/session-01-intro-explore/first-git-push.html" },
+      { "label": "Explore notes (md)", "href": "sessions/session-01-intro-explore/explore.md" },
+      { "label": "Explore notes (pdf)", "href": "sessions/session-01-intro-explore/explore.pdf" }
+    ]
+  },
+  {
+    "id": "session-02-git-agents",
+    "title": "Session 2 — Git + Your Own Agent",
+    "date": "08 October 2026",
+    "description": "Git basics, branch / diff / reset / merge conflicts, VS Code + agent setup, CTF intro.",
+    "deck": "sessions/session-02-git-agents/index.html",
+    "files": [
+      { "label": "Main deck", "href": "sessions/session-02-git-agents/index.html" },
+      { "label": "First git push deck", "href": "sessions/session-02-git-agents/first-git-push-deck.html" },
+      { "label": "Last session recap", "href": "sessions/session-02-git-agents/last-session-presentation.html" }
+    ]
+  },
+  {
+    "id": "session-02-1-git-recovery",
+    "title": "Session 2.1 — Git Recovery + Your Own Agent",
+    "date": "15 October 2026",
+    "description": "Git recovery workflows, conflict practice, bio-page assignment, push your agent-built page.",
+    "deck": "sessions/session-02-1-git-recovery/index.html",
+    "files": [
+      { "label": "Main deck", "href": "sessions/session-02-1-git-recovery/index.html" },
+      { "label": "Session 2 recap", "href": "sessions/session-02-1-git-recovery/session-2-recap.html" },
+      { "label": "First git push deck", "href": "sessions/session-02-1-git-recovery/first-git-push-deck.html" },
+      { "label": "Slides (pdf)", "href": "sessions/session-02-1-git-recovery/slides.pdf" },
+      { "label": "Assignment", "href": "sessions/session-02-1-git-recovery/assignment.txt" }
+    ]
+  }
+]
