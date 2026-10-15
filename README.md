@@ -75,7 +75,7 @@ Append exactly one JSON object (keep alphabetical order if you can, trailing com
 Rules:
 - `folder` MUST equal `<name>-<id>` exactly (case-sensitive).
 - `page` MUST equal `students/<folder>/index.html`.
-- `name` + `id` must be unique — no duplicates.
+- `id` + `folder` must be unique — no duplicates (same first name is fine, IDs differ).
 - Only ONE new entry per PR. Do not reformat the whole file.
 
 ### Step 4 — commit + push your branch, open PR to `main`

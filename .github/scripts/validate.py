@@ -125,10 +125,9 @@ def main():
             errors.append(fail(f"`page` must be `students/{folder}/index.html`. Got `{page}`."))
         if not FOLDER_RE.match(folder):
             errors.append(fail(f"Bad folder value `{folder}`. Keep original case, start with letter, allowed: A-Za-z0-9_- plus single `-` separator."))
-        # duplicates in head
-        names = [e.get("name") for e in head_list]; ids=[e.get("id") for e in head_list]; folders_l=[e.get("folder") for e in head_list]
-        if names.count(name) > 1: errors.append(fail(f"Duplicate name `{name}` in students.json."))
-        if ids.count(sid) > 1: errors.append(fail(f"Duplicate id `{sid}` in students.json."))
+        # duplicates in head (names may repeat — different students can share a first name)
+        ids=[e.get("id") for e in head_list]; folders_l=[e.get("folder") for e in head_list]
+        if ids.count(sid) > 1: errors.append(fail(f"Duplicate id `{sid}` in students.json. Your ID must be unique."))
         if folders_l.count(folder) > 1: errors.append(fail(f"Duplicate folder `{folder}` in students.json."))
         # touched folder must match entry folder
         if folders and folders != [folder]:
