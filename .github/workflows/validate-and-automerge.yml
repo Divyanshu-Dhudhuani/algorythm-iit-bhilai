@@ -14,7 +14,7 @@ jobs:
   validate:
     runs-on: ubuntu-latest
     steps:
-      - name: PR basics (base + branch-first rule)
+      - name: PR basics (base + branch-first + ownership rule)
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           HEAD_REF: ${{ github.event.pull_request.head.ref }}
@@ -23,8 +23,9 @@ jobs:
           BASE_REF: ${{ github.event.pull_request.base.ref }}
           PR_NUMBER: ${{ github.event.pull_request.number }}
           PR_TITLE: ${{ github.event.pull_request.title }}
+          PR_AUTHOR: ${{ github.event.pull_request.user.login }}
         run: |
-          echo "base=$BASE_REF head=$HEAD_REF ($HEAD_REPO -> $BASE_REPO) title=$PR_TITLE"
+          echo "base=$BASE_REF head=$HEAD_REF ($HEAD_REPO -> $BASE_REPO) title=$PR_TITLE author=$PR_AUTHOR"
           # 1. base must be main (enforced by trigger, double-check)
           if [ "$BASE_REF" != "main" ]; then
             MSG="❌ Base branch must be \`main\`. Please retarget your PR to \`main\`."
@@ -41,24 +42,35 @@ jobs:
           git fetch upstream
           git checkout main
           git reset --hard upstream/main
-          git checkout -b add-<NAME>-<ID>
+          git checkout -b add-<NAME>-<ID>-<YourGithubUsername>
           # move your changes onto the new branch, then push it and open a NEW PR from it
           \`\`\`
-          Close this PR and reopen from \`add-<NAME>-<ID>\`."
+          Close this PR and reopen from your own branch."
             echo "$MSG"; gh pr comment "$PR_NUMBER" --repo "$BASE_REPO" --body "$MSG"
             exit 1
           fi
-          # 3. branch naming + title format (soft-enforced, hard-fail for auto-merge)
-          if ! echo "$HEAD_REF" | grep -Eq '^(add|update)-[A-Za-z][A-Za-z0-9_-]*-[A-Za-z0-9_-]+$'; then
+          # 3. branch naming: add-/update-<NAME>-<ID>-<GithubUsername>, folder keeps original case
+          if ! echo "$HEAD_REF" | grep -Eq '^(add|update)-[A-Za-z][A-Za-z0-9_]*-[A-Za-z0-9]+-[A-Za-z0-9]([A-Za-z0-9-]{0,37}[A-Za-z0-9])?$'; then
             MSG="❌ **Bad branch name \`$HEAD_REF\`.**
-          Use \`add-<NAME>-<ID>\` for new pages or \`update-<NAME>-<ID>\` for edits. Example: \`add-Swarnadip-12345\`.
-          Your folder must be \`students/<NAME>-<ID>/\` with the SAME case."
+          Use \`add-<NAME>-<ID>-<YourGithubUsername>\` for new pages or \`update-<NAME>-<ID>-<YourGithubUsername>\` for edits. Example: \`add-Swarnadip-12345-Swarnadip-Kar\`.
+          Your folder must be \`students/<NAME>-<ID>-<GithubUsername>/\` with the SAME case."
             echo "$MSG"; gh pr comment "$PR_NUMBER" --repo "$BASE_REPO" --body "$MSG"
             exit 1
           fi
-          if ! echo "$PR_TITLE" | grep -Eq '^(add|update): *[^ ]+-[^ ]+$'; then
+          if ! echo "$PR_TITLE" | grep -Eq '^(add|update): *[A-Za-z][A-Za-z0-9_]*-[A-Za-z0-9]+-[A-Za-z0-9]([A-Za-z0-9-]{0,37}[A-Za-z0-9])?$'; then
             MSG="❌ **Bad PR title \`$PR_TITLE\`.**
-          Title must be \`add: <NAME>-<ID>\` (or \`update: <NAME>-<ID>\`). Example: \`add: Swarnadip-12345\`."
+          Title must be \`add: <NAME>-<ID>-<GithubUsername>\` (or \`update: …\`). Example: \`add: Swarnadip-12345-Swarnadip-Kar\`."
+            echo "$MSG"; gh pr comment "$PR_NUMBER" --repo "$BASE_REPO" --body "$MSG"
+            exit 1
+          fi
+          # 4. ownership: the username part of branch (and folder) must be YOUR OWN login
+          # branch = add|update-NAME-ID-user; NAME/ID have no hyphens, user may → strip prefix, user is 3rd+ segment
+          REST=$(echo "$HEAD_REF" | sed -E 's/^(add|update)-//')
+          BRANCH_USER=$(echo "$REST" | cut -d- -f3-)
+          if [ "$(echo "$BRANCH_USER" | tr '[:upper:]' '[:lower:]')" != "$(echo "$PR_AUTHOR" | tr '[:upper:]' '[:lower:]')" ]; then
+            MSG="❌ **Ownership violation: branch \`$HEAD_REF\` claims GitHub user \`$BRANCH_USER\`, but this PR was opened by \`@$PR_AUTHOR\`.**
+          You may ONLY use the folder/branch carrying YOUR OWN username: \`add-<NAME>-<ID>-$PR_AUTHOR\`.
+          (Comparison is case-insensitive, but keep your folder's original case consistent.)"
             echo "$MSG"; gh pr comment "$PR_NUMBER" --repo "$BASE_REPO" --body "$MSG"
             exit 1
           fi
@@ -86,7 +98,7 @@ jobs:
           **Resolve locally first, then push** (see README §2 — do NOT just click Resolve on github.com):
           \`\`\`bash
           git fetch upstream
-          git checkout <your-branch>   # e.g. add-Swarnadip-12345
+          git checkout <your-branch>   # e.g. add-Swarnadip-12345-Swarnadip-Kar
           git rebase upstream/main     # or: git merge upstream/main
           # open students.json → keep BOTH entries (yours + theirs), delete <<<<<<< ======= >>>>>>> markers
           python3 -c \"import json; json.load(open('students.json')); print('JSON OK')\"
@@ -111,10 +123,12 @@ jobs:
           git remote add upstream "https://github.com/${{ github.event.pull_request.base.repo.full_name }}.git" || true
           git fetch upstream main --depth=50
 
-      - name: Content validation (files + students.json + index.html)
+      - name: Content validation (files + ownership + students.json + index.html)
         id: content
+        env:
+          PR_AUTHOR: ${{ github.event.pull_request.user.login }}
         run: |
-          python3 .github/scripts/validate.py --base upstream/main --head HEAD
+          python3 .github/scripts/validate.py --base upstream/main --head HEAD --author "$PR_AUTHOR"
         # on failure, next step comments the log
 
       - name: Comment on content-validation failure
@@ -127,9 +141,9 @@ jobs:
           gh pr comment "$PR_NUMBER" --repo "$BASE_REPO" --body "❌ **Content validation failed.** See the failing \`validate\` job log for the exact rule.
 
           Quick checklist (README §1):
-          - Changed files = ONLY \`students/<NAME>-<ID>/**\` + \`students.json\` (nothing else, never \`students/_template/\`)
-          - \`students.json\` adds EXACTLY one entry: \`folder == name-id\`, \`page == students/<folder>/index.html\`, no duplicates
-          - \`students/<NAME>-<ID>/index.html\` exists, has \`<html>\` + \`<h1>\`/\`<title>\`, folder < 500 KB
+          - Changed files = ONLY YOUR OWN \`students/<NAME>-<ID>-<GithubUsername>/**\` + \`students.json\` (nothing else, never \`students/_template/\`, never someone else's folder)
+          - \`students.json\` adds EXACTLY one entry: \`folder == name-id-github\`, \`page == students/<folder>/index.html\`, \`github\` == YOUR username, no duplicate id/folder/user
+          - \`students/<NAME>-<ID>-<GithubUsername>/index.html\` exists, has \`<html>\` + \`<h1>\`/\`<title>\` with your real name, folder < 500 KB
           - For bio edits: leave \`students.json\` untouched, touch ONLY your own listed folder
 
           Fix on the SAME branch and push — the bot re-runs automatically. 🤖"

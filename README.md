@@ -4,7 +4,7 @@ Main hub for all ALGORYTHM session slide decks + student bio pages.
 
 - **Live site:** GitHub Pages serves `index.html` from `main` (root). It reads `students.json` + `sessions.json` and renders the lists — no build step.
 - **Slide decks:** HTML files under `sessions/<session-id>/`. Linked from `index.html` via `sessions.json`. Since they are plain HTML, they open directly in the browser.
-- **Student pages:** each student owns `students/<NAME>-<ID>/index.html` + **one line** in `students.json`. `index.html` at root reads that JSON and creates the directory of webpages.
+- **Student pages:** each student owns `students/<NAME>-<ID>-<GithubUsername>/index.html` + **one line** in `students.json`. `index.html` at root reads that JSON and creates the directory of webpages.
 
 > Students get featured by opening a Pull Request. PRs that follow the exact format below are **auto-merged** by GitHub Actions 🤖.
 
@@ -13,6 +13,7 @@ Main hub for all ALGORYTHM session slide decks + student bio pages.
 ## 1. For students — add your bio page (required workflow)
 
 > ⚠️ **You MUST create your own branch first. PRs raised directly from `main` are auto-rejected.**
+> ⚠️ **You may ONLY edit the folder carrying YOUR OWN GitHub username. Touching anyone else's folder = auto-rejected.**
 > ⚠️ **If your PR shows a merge conflict, it will NOT be merged. Resolve it locally first, then push.**
 
 ### Step 0 — one-time setup
@@ -32,29 +33,30 @@ git reset --hard upstream/main
 ```bash
 git checkout main
 git pull upstream main      # or: git fetch upstream && git reset --hard upstream/main
-git checkout -b add-<NAME>-<ID>
-# Example: git checkout -b add-Swarnadip-12345
+git checkout -b add-<NAME>-<ID>-<YourGithubUsername>
+# Example: git checkout -b add-Swarnadip-12345-Swarnadip-Kar
 ```
 
 Rules:
-- Branch name must be `add-<NAME>-<ID>` (same `<NAME>-<ID>` as your folder). Keep your original case.
+- Branch name must be `add-<NAME>-<ID>-<YourGithubUsername>` (same suffix as your folder). Keep your original case.
+- The username part MUST be YOUR OWN GitHub username (case-insensitive match with the PR author). You cannot open a PR for someone else's folder.
 - Never commit directly to `main`. Never open a PR whose head branch is `main`/`master` — the bot rejects it.
 - One student = one branch = one PR.
 
 ### Step 2 — create your folder
 
 ```bash
-cp -r students/_template students/<NAME>-<ID>
-# Example: cp -r students/_template students/Swarnadip-12345
+cp -r students/_template students/<NAME>-<ID>-<YourGithubUsername>
+# Example: cp -r students/_template students/Swarnadip-12345-Swarnadip-Kar
 ```
 
 Rules:
-- Folder must be exactly `<NAME>-<ID>` — keep your original case (no forced lowercase).
-- Allowed characters: letters, numbers, `_`, `-`. Must start with a letter. Must contain exactly one `-` separating NAME and ID.
-- Example: `Swarnadip-12345` → NAME=`Swarnadip`, ID=`12345`. ID is your roll no. / chosen ID — keep it stable forever.
-- Inside your folder: `index.html` is **required**. You may add `style.css` and images (total < 500 KB). Do NOT touch anyone else's folder.
+- Folder must be exactly `<NAME>-<ID>-<GithubUsername>` — keep your original case (no forced lowercase).
+- NAME = your real name: letters/numbers/`_`, start with letter, NO hyphens. ID = your roll no. / chosen ID: letters/numbers, NO hyphens (keeps the 3-part split unambiguous). Last part = YOUR GitHub username (may contain hyphens).
+- Example: `Swarnadip-12345-Swarnadip-Kar` → NAME=`Swarnadip`, ID=`12345`, GithubUsername=`Swarnadip-Kar`. Keep ID stable forever.
+- Inside your folder: `index.html` is **required** (put your real name in `<h1>`/`<title>`). You may add `style.css` and images (total < 500 KB). Do NOT touch anyone else's folder — the bot checks the username part against YOUR login.
 
-Edit `students/<NAME>-<ID>/index.html` — make it beautiful. See `students/_template/index.html` and `students/Swarnadip-12345/index.html`.
+Edit `students/<NAME>-<ID>-<GithubUsername>/index.html` — make it beautiful. See `students/_template/index.html` and `students/Swarnadip-12345-Swarnadip-Kar/index.html`. Your page is listed on the main hub (`index.html`) automatically from `students.json`.
 
 ### Step 3 — add ONE line to `students.json`
 
@@ -65,35 +67,36 @@ Append exactly one JSON object (keep alphabetical order if you can, trailing com
   {
     "name": "Swarnadip",
     "id": "12345",
-    "folder": "Swarnadip-12345",
-    "page": "students/Swarnadip-12345/index.html",
+    "folder": "Swarnadip-12345-Swarnadip-Kar",
+    "page": "students/Swarnadip-12345-Swarnadip-Kar/index.html",
     "github": "Swarnadip-Kar"
   }
 ]
 ```
 
 Rules:
-- `folder` MUST equal `<name>-<id>` exactly (case-sensitive).
+- `folder` MUST equal `<name>-<id>-<github>` exactly (case-sensitive).
 - `page` MUST equal `students/<folder>/index.html`.
-- `id` + `folder` must be unique — no duplicates (same first name is fine, IDs differ).
+- `github` MUST equal YOUR GitHub username (matches the PR author, case-insensitive).
+- `id` + `folder` + `github` must be unique — no duplicates (same first name is fine; one folder per GitHub account).
 - Only ONE new entry per PR. Do not reformat the whole file.
 
 ### Step 4 — commit + push your branch, open PR to `main`
 
 ```bash
-git add students/<NAME>-<ID> students.json
+git add students/<NAME>-<ID>-<YourGithubUsername> students.json
 git status   # MUST show only your folder + students.json
-git commit -m "add: <NAME>-<ID> bio page"
-git push -u origin add-<NAME>-<ID>
+git commit -m "add: <NAME>-<ID>-<YourGithubUsername> bio page"
+git push -u origin add-<NAME>-<ID>-<YourGithubUsername>
 ```
 
-Then on GitHub: **Compare & pull request** → base: `upstream/main` ← compare: `<YOUR-USERNAME>:add-<NAME>-<ID>`.
+Then on GitHub: **Compare & pull request** → base: `upstream/main` ← compare: `<YOUR-USERNAME>:add-<NAME>-<ID>-<YourGithubUsername>`.
 
 PR title format (required for auto-merge):
 
 ```
-add: <NAME>-<ID>
-# Example: add: Swarnadip-12345
+add: <NAME>-<ID>-<GithubUsername>
+# Example: add: Swarnadip-12345-Swarnadip-Kar
 ```
 
 PR body: write 1 line — your name + what your page has.
@@ -102,13 +105,13 @@ PR body: write 1 line — your name + what your page has.
 
 The `validate-and-automerge` Action approves + squash-merges ONLY if ALL pass:
 
-1. ✅ Head branch is NOT `main`/`master` — must be `add-<NAME>-<ID>`.
+1. ✅ Head branch is NOT `main`/`master` — must be `add-<NAME>-<ID>-<GithubUsername>`, and its username part MUST equal YOUR login (the PR author).
 2. ✅ Base branch is `main`.
 3. ✅ No merge conflicts (`mergeable` = clean). **Conflicting PRs are rejected — see §2.**
-4. ✅ Changed files = ONLY `students/<NAME>-<ID>/**` + `students.json` (nothing else).
-5. ✅ `students.json` diff = exactly +1 entry, valid JSON, `folder == name-id`, `page == students/<folder>/index.html`, no duplicate name/id/folder.
-6. ✅ `students/<NAME>-<ID>/index.html` exists, contains `<html>` + `<h1>`/`<title>`, < 500 KB, no secrets.
-7. ✅ For **edits** (updating your own bio later): `students.json` may stay untouched, but then you may ONLY touch files inside YOUR OWN already-listed folder. Same branch rule applies (`update-<NAME>-<ID>`).
+4. ✅ Changed files = ONLY YOUR OWN `students/<NAME>-<ID>-<GithubUsername>/**` + `students.json` (nothing else — never `_template/`, never someone else's folder).
+5. ✅ `students.json` diff = exactly +1 entry, valid JSON, `folder == name-id-github`, `page == students/<folder>/index.html`, `github` == YOUR username, no duplicate id/folder/github-user.
+6. ✅ `students/<NAME>-<ID>-<GithubUsername>/index.html` exists, contains `<html>` + `<h1>`/`<title>` with your real name, < 500 KB, no secrets.
+7. ✅ For **edits** (updating your own bio later): `students.json` may stay untouched, but then you may ONLY touch files inside YOUR OWN already-listed folder. Same branch rule applies (`update-<NAME>-<ID>-<GithubUsername>`).
 
 If any check fails, the bot posts a comment explaining what to fix. Fix on the SAME branch + push — the PR re-checks automatically. No need to open a new PR.
 
@@ -154,7 +157,7 @@ Add a session:
 
 GitHub Pages: Settings → Pages → Deploy from branch `main` / root (already configured via `.github/workflows/pages.yml` as backup). Site URL is shown in the workflow + repo About section.
 
-Branch protection (recommended): Settings → Branches → add rule for `main`: require `validate` status check to pass, require PR before merging, do NOT allow direct pushes. Auto-merge bot has `contents:write + pull-requests:write` and squash-merges compliant PRs.
+Branch protection (active): `main` requires the `validate` check + PR before merging (strict off so queued auto-merges complete). Admins can still push session decks directly. Auto-merge bot has `contents:write + pull-requests:write` and squash-merges compliant PRs.
 
 Management notes (private, NOT in git): see `../management/` next to this repo — owner checklist, links, roll list. Never commit that folder.
 
@@ -169,8 +172,8 @@ algorythm-iit-bhilai/
   sessions.json         ← slide-deck catalogue
   students/
     _template/index.html
-    Swarnadip-12345/index.html   ← example
-    <NAME>-<ID>/index.html       ← yours
+    Swarnadip-12345-Swarnadip-Kar/index.html   ← example
+    <NAME>-<ID>-<GithubUsername>/index.html  ← yours (username MUST be yours)
   sessions/
     session-01-intro-explore/index.html (+ pdf/md/png)
     session-02-git-agents/index.html (+ …)

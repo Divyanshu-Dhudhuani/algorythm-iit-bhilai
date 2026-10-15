@@ -77,15 +77,15 @@ footer{margin-top:48px;color:var(--muted);font-size:13px;border-top:1px solid va
 
   <section id="students-sec">
     <h2>🧑‍💻 Student bio pages</h2>
-    <p class="hint">Each student owns <code>students/&lt;NAME&gt;-&lt;ID&gt;/index.html</code> + one line in <code>students.json</code>. Click a card to open their page. To get featured, open a PR (see README).</p>
+    <p class="hint">Each student owns <code>students/&lt;NAME&gt;-&lt;ID&gt;-&lt;GithubUsername&gt;/index.html</code> + one line in <code>students.json</code>. Only the matching GitHub user may edit it. Click a card to open their page. To get featured, open a PR (see README).</p>
     <div class="toolbar">
-      <input type="search" id="q" placeholder="Search name or ID… (e.g. Swarnadip)" />
+      <input type="search" id="q" placeholder="Search name, ID or GitHub user… (e.g. Swarnadip)" />
       <span class="count" id="count"></span>
     </div>
     <div class="grid" id="students"></div>
     <div class="howto">
       <b>Add your page in 4 steps:</b>
-      1) Fork repo → 2) copy <code>students/_template/</code> to <code>students/YourName-YourID/</code> →
+      1) Fork repo → 2) copy <code>students/_template/</code> to <code>students/YourName-YourID-YourGithubUsername/</code> →
       3) edit your <code>index.html</code> → 4) add one line to <code>students.json</code> → open PR.
       Full steps in <a href="README.md">README</a>. PRs that follow the format are auto-merged 🤖.
     </div>

@@ -2,15 +2,8 @@
   {
     "name": "Swarnadip",
     "id": "12345",
-    "folder": "Swarnadip-12345",
-    "page": "students/Swarnadip-12345/index.html",
-    "github": "Swarnadip-Kar"
-  },
-  {
-    "name": "Swarnadip",
-    "id": "99999",
-    "folder": "Swarnadip-99999",
-    "page": "students/Swarnadip-99999/index.html",
+    "folder": "Swarnadip-12345-Swarnadip-Kar",
+    "page": "students/Swarnadip-12345-Swarnadip-Kar/index.html",
     "github": "Swarnadip-Kar"
   }
 ]
