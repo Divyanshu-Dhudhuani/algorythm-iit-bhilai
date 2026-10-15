@@ -57,11 +57,15 @@ def fail(msg):
     return msg
 
 def split_folder(folder):
-    """Split <NAME>-<ID>-<user> into parts; NAME/ID contain no hyphens so exactly 3 parts."""
+    """Split <NAME>-<ID>-<user> into parts.
+
+    NAME and ID contain no hyphens, but GitHub usernames MAY — so the
+    username is everything after the SECOND hyphen.
+    """
     parts = folder.split("-")
-    if len(parts) != 3:
+    if len(parts) < 3 or not parts[0] or not parts[1] or not parts[2]:
         return None
-    return parts[0], parts[1], parts[2]
+    return parts[0], parts[1], "-".join(parts[2:])
 
 def main():
     ap = argparse.ArgumentParser()
@@ -108,7 +112,8 @@ def main():
         if not parts:
             errors.append(fail(
                 f"Bad folder name `{fo}`. Must be `<NAME>-<ID>-<GithubUsername>` "
-                "(exactly two `-` separators). Example: `Swarnadip-12345-Swarnadip-Kar`."))
+                "(NAME and ID contain no hyphens; the username is everything after the 2nd `-`). "
+                "Example: `Swarnadip-12345-Swarnadip-Kar`."))
             continue
         name_p, id_p, user_p = parts
         if not NAME_RE.match(name_p):
