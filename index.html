@@ -6,78 +6,125 @@
 <title>ALGORYTHM Sessions — IIT Bhilai</title>
 <meta name="description" content="Main hub for ALGORYTHM session slide decks + student bio pages. Students submit via PR." />
 <style>
+/* Design language copied from Session 1 deck (sessions/session-01-intro-explore/index.html) */
 :root{
-  --bg:#0b0e14; --panel:#121724; --panel2:#1a2236;
-  --fg:#eef2ff; --muted:#9aa7c7; --border:#26314d;
-  --accent:#4ade80; --accent2:#60a5fa; --warn:#fbbf24;
-  --radius:14px;
-  --font: -apple-system,BlinkMacSystemFont,"Inter","Segoe UI",system-ui,sans-serif;
-  --mono: ui-monospace,"JetBrains Mono","IBM Plex Mono",Menlo,monospace;
+--bg: oklch(98% 0.005 250);
+--surface: oklch(100% 0 0);
+--fg: oklch(22% 0.02 240);
+--muted: oklch(50% 0.018 240);
+--border: oklch(90% 0.008 240);
+--accent: oklch(58% 0.16 145);
+--accent-ink: oklch(100% 0 0);
+--link: oklch(55% 0.15 250);
+--font-display: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', system-ui, sans-serif;
+--font-body: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', system-ui, sans-serif;
+--font-mono: 'JetBrains Mono', 'IBM Plex Mono', ui-monospace, Menlo, monospace;
+--shell: #08090d;
 }
 *{box-sizing:border-box;margin:0;padding:0}
-body{background:radial-gradient(1000px 500px at 20% -10%,#16213d 0%,var(--bg) 55%) fixed,var(--bg);color:var(--fg);font:16px/1.6 var(--font);min-height:100vh}
-a{color:var(--accent2)}
-.wrap{max-width:1080px;margin:0 auto;padding:32px 20px 64px}
-header.top{display:flex;gap:16px;align-items:center;justify-content:space-between;flex-wrap:wrap;margin-bottom:20px}
-.brand{display:flex;gap:14px;align-items:center}
-.logo{width:48px;height:48px;border-radius:12px;background:linear-gradient(135deg,var(--accent),var(--accent2));display:grid;place-items:center;font-weight:800;color:#06130c;font-size:22px}
-h1{font-size:clamp(24px,4vw,36px);letter-spacing:-.02em}
-.sub{color:var(--muted);margin-top:4px}
-.btn-row{display:flex;gap:10px;flex-wrap:wrap}
-.btn{display:inline-block;padding:10px 16px;border-radius:999px;border:1px solid var(--border);background:var(--panel);color:var(--fg);text-decoration:none;font-weight:600;font-size:14px}
-.btn.primary{background:var(--accent);border-color:var(--accent);color:#06130c}
-.btn:hover{filter:brightness(1.1)}
+html{background:var(--shell)}
+body{background:var(--bg);color:var(--fg);font:17px/1.6 var(--font-body);-webkit-font-smoothing:antialiased;min-height:100vh}
+a{color:var(--link)}
+.wrap{max-width:1080px;margin:0 auto;padding:36px 22px 64px}
+.kicker{font-family:var(--font-mono);font-size:12px;letter-spacing:.22em;text-transform:uppercase;color:var(--muted)}
+header.top{border-bottom:1px solid var(--border);padding-bottom:22px;margin-bottom:8px}
+.brand{display:flex;gap:16px;align-items:center;flex-wrap:wrap}
+.logo{width:52px;height:52px;border-radius:14px;background:var(--fg);color:var(--bg);display:grid;place-items:center;font-family:var(--font-display);font-weight:800;font-size:24px;flex:none}
+h1{font-family:var(--font-display);font-size:clamp(26px,4.4vw,40px);letter-spacing:-.02em;line-height:1.1}
+.sub{color:var(--muted);margin-top:6px;max-width:70ch}
+.btn-row{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}
+.btn{display:inline-block;padding:9px 18px;border-radius:999px;border:1px solid var(--border);background:var(--surface);color:var(--fg);text-decoration:none;font-weight:600;font-size:14px;font-family:var(--font-display)}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.btn:hover{filter:brightness(.96)}
+/* maintainer */
+.maintainer{margin-top:22px;background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:20px;display:flex;gap:18px;align-items:flex-start}
+.maintainer img.avatar-lg{width:88px;height:88px;border-radius:50%;border:1px solid var(--border);flex:none;background:var(--bg)}
+.maintainer h2{font-family:var(--font-display);font-size:20px;letter-spacing:-.01em}
+.maintainer .role{font-family:var(--font-mono);font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin:2px 0 8px}
+.maintainer p{font-size:15px;color:var(--fg);margin-bottom:8px}
+.maintainer p:last-child{margin-bottom:0}
+.mission{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px}
+.pill{font-family:var(--font-mono);font-size:12px;letter-spacing:.08em;border:1px solid var(--border);background:var(--bg);border-radius:999px;padding:5px 12px}
+.pill b{color:var(--fg)}
+/* sections */
+section{margin-top:34px}
+section>h2{font-family:var(--font-display);font-size:22px;letter-spacing:-.01em;margin-bottom:2px}
+.hint{color:var(--muted);font-size:14px;margin-bottom:6px}
+.hint code,.howto code{font-family:var(--font-mono);font-size:12.5px;background:var(--surface);padding:2px 7px;border-radius:6px;border:1px solid var(--border)}
 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:14px;margin-top:14px}
-.card{background:linear-gradient(180deg,var(--panel),var(--panel2));border:1px solid var(--border);border-radius:var(--radius);padding:18px}
-.card h3{font-size:18px;margin-bottom:6px}
-.meta{color:var(--muted);font-size:13px;font-family:var(--mono);margin-bottom:8px}
-.desc{color:#cbd5e1;font-size:14px;margin-bottom:12px}
-.links{display:flex;gap:8px;flex-wrap:wrap}
-.links a{font-size:13px;padding:6px 12px;border-radius:999px;border:1px solid var(--border);background:#0e1424;color:var(--fg);text-decoration:none}
-.links a.main{background:var(--accent2);border-color:var(--accent2);color:#06121f;font-weight:700}
-.links a:hover{filter:brightness(1.15)}
-section{margin-top:32px}
-section>h2{font-size:20px;margin-bottom:4px}
-section>p.hint{color:var(--muted);font-size:14px;margin-bottom:8px}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:18px}
+.card h3{font-family:var(--font-display);font-size:18px;letter-spacing:-.01em;margin-bottom:4px}
+.meta{color:var(--muted);font-size:12.5px;font-family:var(--font-mono);letter-spacing:.06em;margin-bottom:8px}
+.desc{font-size:14.5px;margin-bottom:12px}
+.links{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.links a{font-size:13.5px;font-weight:600;padding:7px 14px;border-radius:999px;border:1px solid var(--border);background:var(--bg);color:var(--fg);text-decoration:none;font-family:var(--font-display)}
+.links a.open{background:var(--fg);border-color:var(--fg);color:var(--bg)}
+.links a:hover{filter:brightness(.96)}
+.extras{margin-top:10px;font-size:13px;color:var(--muted)}
+.extras a{color:var(--link);text-decoration:none;margin-right:12px}
+.extras a:hover{text-decoration:underline}
+/* students */
 .toolbar{display:flex;gap:10px;margin:12px 0;flex-wrap:wrap}
-input[type=search]{flex:1;min-width:220px;padding:10px 14px;border-radius:10px;border:1px solid var(--border);background:#0e1424;color:var(--fg);font-size:14px}
-.count{color:var(--muted);font-size:13px;font-family:var(--mono);align-self:center}
-.student-card{display:flex;flex-direction:column;gap:8px}
-.avatar{width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,#334155,#0ea5e9);display:grid;place-items:center;font-weight:800;font-size:18px}
-.s-top{display:flex;gap:12px;align-items:center}
-.s-name{font-weight:700}
-.s-id{font-family:var(--mono);font-size:12px;color:var(--muted)}
-.howto{background:#0e1424;border:1px dashed var(--border);border-radius:var(--radius);padding:16px;margin-top:12px;font-size:14px;color:#cbd5e1}
-code{font-family:var(--mono);font-size:13px;background:#080c16;padding:2px 6px;border-radius:6px;border:1px solid var(--border)}
-footer{margin-top:48px;color:var(--muted);font-size:13px;border-top:1px solid var(--border);padding-top:16px}
-.error{background:#3f1d1d;border:1px solid #7f2d2d;padding:12px;border-radius:10px;font-size:14px}
+input[type=search]{flex:1;min-width:220px;padding:10px 14px;border-radius:10px;border:1px solid var(--border);background:var(--surface);color:var(--fg);font-size:14px;font-family:var(--font-body)}
+.count{color:var(--muted);font-size:12.5px;font-family:var(--font-mono);align-self:center;letter-spacing:.08em}
+.s-top{display:flex;gap:12px;align-items:center;margin-bottom:10px}
+.s-top img.avatar{width:48px;height:48px;border-radius:50%;border:1px solid var(--border);background:var(--bg);flex:none}
+.avatar-fallback{width:48px;height:48px;border-radius:50%;background:var(--fg);color:var(--bg);display:grid;place-items:center;font-weight:800;font-size:19px;font-family:var(--font-display);flex:none}
+.s-name{font-weight:700;font-family:var(--font-display)}
+.s-id{font-family:var(--font-mono);font-size:12px;color:var(--muted)}
+.s-github{font-family:var(--font-mono);font-size:12px;color:var(--muted)}
+.howto{background:var(--surface);border:1px dashed var(--border);border-radius:16px;padding:16px;margin-top:14px;font-size:14px}
+footer{margin-top:48px;color:var(--muted);font-size:13px;border-top:1px solid var(--border);padding-top:16px;font-family:var(--font-mono);font-size:12px;letter-spacing:.04em}
+footer a{color:var(--link)}
+.error{background:#fdecec;border:1px solid #f3b8b8;padding:12px;border-radius:10px;font-size:14px}
+@media(max-width:640px){.maintainer{flex-direction:column}}
 </style>
 </head>
 <body>
 <div class="wrap">
   <header class="top">
-    <div class="brand">
+    <div class="kicker">ALGORYTHM · IIT Bhilai · the tech club</div>
+    <div class="brand" style="margin-top:8px">
       <div class="logo">A</div>
       <div>
         <h1>ALGORYTHM Sessions</h1>
-        <div class="sub">IIT Bhilai — slide decks + student bio pages. One repo, all sessions.</div>
+        <div class="sub">One repo, all sessions — slide decks + student bio pages. Built live in the sessions, by the sessions.</div>
       </div>
     </div>
     <div class="btn-row">
-      <a class="btn primary" href="https://github.com/" id="repoLink">★ Star / Fork on GitHub</a>
+      <a class="btn primary" href="https://github.com/Swarnadip-Kar/algorythm-iit-bhilai" id="repoLink">★ Star / Fork on GitHub</a>
       <a class="btn" href="README.md">How to add your page →</a>
     </div>
   </header>
 
+  <div class="maintainer">
+    <img class="avatar-lg" src="https://github.com/Swarnadip-Kar.png?size=176" alt="Swarnadip's GitHub avatar" loading="lazy" onerror="this.style.display='none'" />
+    <div>
+      <div class="kicker">Maintainer</div>
+      <h2>Swarnadip — DUGC Representative, CSE, IIT Bhilai</h2>
+      <div class="role">Runs ALGORYTHM · your senior, not your lecturer</div>
+      <p><b>Why ALGORYTHM?</b> Seniors and juniors exploring tech together — weekly sessions, small homework, CTFs, showcases. Mission: <b>increase tech culture</b>. No session makes you a master; each one is <b>map + proof + first step + game</b>.</p>
+      <p>Why bother? <b>Leverage</b> — build once, used by thousands (our attendance app, tapped within days). <b>Optionality</b> — GSoC, internships, research, startups: proof beats marks. <b>Fun</b> — your phone becomes a MIDI looper for ₹0. And the rule for the AI era: <b>use AI — but be good enough to catch it when it's wrong</b>.</p>
+      <p>So: come with your laptop, leave with a page on this hub. Best bio pages go on stage next session. 🔥</p>
+      <div class="mission">
+        <span class="pill"><b>01 / MAP</b> · why tech + where to look</span>
+        <span class="pill"><b>02 / PROOF</b> · what students like you built</span>
+        <span class="pill"><b>03 / PLAY</b> · homework + CTF</span>
+      </div>
+    </div>
+  </div>
+
   <section id="sessions-sec">
+    <div class="kicker">01 / Talk + hands-on</div>
     <h2>📚 Session slide decks</h2>
     <p class="hint">HTML decks open directly — no download needed. New sessions get appended to <code>sessions.json</code>.</p>
     <div class="grid" id="sessions"></div>
   </section>
 
   <section id="students-sec">
+    <div class="kicker">02 / Proof · your turn</div>
     <h2>🧑‍💻 Student bio pages</h2>
-    <p class="hint">Each student owns <code>students/&lt;NAME&gt;-&lt;ID&gt;-&lt;GithubUsername&gt;/index.html</code> + one line in <code>students.json</code>. Only the matching GitHub user may edit it. Click a card to open their page. To get featured, open a PR (see README).</p>
+    <p class="hint">Each student owns <code>students/&lt;NAME&gt;-&lt;ID&gt;-&lt;GithubUsername&gt;/index.html</code> + one line in <code>students.json</code>. To get featured, open a PR (see README).</p>
     <div class="toolbar">
       <input type="search" id="q" placeholder="Search name, ID or GitHub user… (e.g. Swarnadip)" />
       <span class="count" id="count"></span>
@@ -86,14 +133,13 @@ footer{margin-top:48px;color:var(--muted);font-size:13px;border-top:1px solid va
     <div class="howto">
       <b>Add your page in 4 steps:</b>
       1) Fork repo → 2) copy <code>students/_template/</code> to <code>students/YourName-YourID-YourGithubUsername/</code> →
-      3) edit your <code>index.html</code> → 4) add one line to <code>students.json</code> → open PR.
+      3) edit your <code>index.html</code> → 4) add one line to <code>students.json</code> → open PR from your own branch.
       Full steps in <a href="README.md">README</a>. PRs that follow the format are auto-merged 🤖.
     </div>
   </section>
 
   <footer>
-    <div>Maintained by ALGORYTHM, IIT Bhilai. Pages deploy via GitHub Actions. Student pages are owned by their authors.</div>
-    <div style="margin-top:6px"><a href="students.json">students.json</a> · <a href="sessions.json">sessions.json</a> · <a href="sessions/session-01-intro-explore/">latest slides</a></div>
+    <div>Maintained by ALGORYTHM, IIT Bhilai · <a href="students.json">students.json</a> · <a href="sessions.json">sessions.json</a> · <a href="sessions/session-01-intro-explore/">latest slides</a></div>
   </footer>
 </div>
 
@@ -109,52 +155,61 @@ async function main(){
   try{
     const [sessions, students] = await Promise.all([loadJSON("sessions.json"), loadJSON("students.json")]);
 
+    // One deck link per session ("Open deck" == deck). Extra files listed separately —
+    // there is no difference between the old "Main deck" and "Open deck" buttons; deduped.
     const sWrap = document.getElementById("sessions");
     sWrap.innerHTML = "";
     sessions.forEach(s=>{
-      const files = (s.files||[]).map(f=>`<a ${f.href===s.deck?'class="main"':""} href="${f.href}">${escapeHtml(f.label)}</a>`).join("");
+      const extras = (s.files||[]).filter(f=>f.href!==s.deck)
+        .map(f=>`<a href="${f.href}">${escapeHtml(f.label)}</a>`).join("");
       sWrap.appendChild(el(`<div class="card">
         <h3>${escapeHtml(s.title)}</h3>
         <div class="meta">${escapeHtml(s.date||"")} · ${escapeHtml(s.id)}</div>
         <div class="desc">${escapeHtml(s.description||"")}</div>
-        <div class="links"><a class="main" href="${s.deck}">▶ Open deck</a>${files}</div>
+        <div class="links"><a class="open" href="${s.deck}">▶ Open deck</a></div>
+        ${extras?`<div class="extras">${extras}</div>`:""}
       </div>`));
     });
 
     const stWrap = document.getElementById("students");
     const q = document.getElementById("q");
     const count = document.getElementById("count");
+    function avatarURL(user){ return "https://github.com/"+encodeURIComponent(user)+".png?size=96"; }
     function render(filter=""){
       const f = filter.trim().toLowerCase();
-      const list = students.filter(s=> !f || (s.name+" "+s.id+" "+s.folder).toLowerCase().includes(f));
-      // sort by name
+      const list = students.filter(s=> !f || (s.name+" "+s.id+" "+(s.github||"")+" "+s.folder).toLowerCase().includes(f));
       list.sort((a,b)=>a.name.localeCompare(b.name));
       stWrap.innerHTML = "";
       list.forEach(s=>{
         const initial = (s.name||"?")[0].toUpperCase();
-        stWrap.appendChild(el(`<div class="card student-card">
-          <div class="s-top"><div class="avatar">${escapeHtml(initial)}</div>
-          <div><div class="s-name">${escapeHtml(s.name)}</div><div class="s-id">${escapeHtml(s.folder)}</div></div></div>
-          <div class="links"><a class="main" href="${s.page}">Open bio page →</a>
+        const card = el(`<div class="card">
+          <div class="s-top">
+            <img class="avatar" src="${avatarURL(s.github||"")}" alt="${escapeAttr(s.github||s.name)}'s GitHub avatar" loading="lazy" />
+            <div><div class="s-name">${escapeHtml(s.name)}</div><div class="s-id">${escapeHtml(s.folder)}</div><div class="s-github">@${escapeHtml(s.github||"")}</div></div>
+          </div>
+          <div class="links"><a class="open" href="${s.page}">Open bio page →</a>
           ${s.github?`<a href="https://github.com/${encodeURIComponent(s.github)}">GitHub</a>`:""}</div>
-        </div>`));
+        </div>`);
+        const img = card.querySelector("img.avatar");
+        img.addEventListener("error", ()=>{
+          const fb = document.createElement("div");
+          fb.className = "avatar-fallback"; fb.textContent = initial;
+          img.replaceWith(fb);
+        }, {once:true});
+        if(!s.github) img.style.display = "none";
+        stWrap.appendChild(card);
       });
       count.textContent = list.length+" / "+students.length+" students";
       if(!list.length) stWrap.appendChild(el(`<div class="card">No matches. Check spelling or add yourself via PR.</div>`));
     }
     q.addEventListener("input", ()=>render(q.value));
     render();
-
-    // repo link: infer from location if hosted on github pages
-    try{
-      const m = location.hostname.match(/^(.+)\.github\.io$/);
-      if(m){ document.getElementById("repoLink").href = `https://github.com/${m[1]}/`+location.pathname.split("/")[1]; }
-    }catch(e){}
   }catch(e){
     document.getElementById("sessions").innerHTML = `<div class="error">Failed to load JSON: ${escapeHtml(e.message)}. If you opened index.html via file://, serve it (e.g. <code>python3 -m http.server</code>) or check GitHub Pages.</div>`;
   }
 }
 function escapeHtml(s){ return String(s??"").replace(/[&<>"']/g, c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c])); }
+function escapeAttr(s){ return escapeHtml(s).replace(/"/g,"&quot;"); }
 main();
 </script>
 </body>
