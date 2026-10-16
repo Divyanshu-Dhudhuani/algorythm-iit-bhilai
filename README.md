@@ -180,5 +180,6 @@ algorythm-iit-bhilai/
     session-02-1-git-recovery/index.html (+ …)
   .github/
     workflows/validate-and-automerge.yml
+    workflows/pages.yml (manual-only; Pages off, Vercel is live)
     scripts/validate.py
 ```

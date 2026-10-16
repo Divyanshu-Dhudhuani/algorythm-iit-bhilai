@@ -1,0 +1,32 @@
+name: pages
+
+# NOTE: GitHub Pages is currently OFF on this repo (the shared *.github.io host
+# is Safe-Browsing flagged because of an unrelated demo project). Live host is
+# Vercel (auto-deploys main). This workflow is kept manual-only so it never
+# runs (and fails) on push — run it by hand only if Pages is ever re-enabled.
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: .
+      - id: deployment
+        uses: actions/deploy-pages@v4
