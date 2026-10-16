@@ -1,0 +1,27 @@
+name: "Add my bio page"
+description: "Fully automatic - the bot creates your folder + PR. No terminal needed."
+title: "add me: YourName-YourID"
+labels: ["add-me"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        The bot scaffolds everything for you. Rules:
+        - Replace `YourName` with your real name (letters/numbers/`_`, NO hyphens or spaces).
+        - Replace `YourID` with your roll number (letters/numbers, NO hyphens).
+        - Keep the title format exactly: `add me: YourName-YourID`
+        - Your GitHub username is taken from YOUR account automatically. One folder per account.
+  - type: input
+    id: name
+    attributes:
+      label: Your NAME part (must match the title)
+      placeholder: Swarnadip
+    validations:
+      required: true
+  - type: input
+    id: studentid
+    attributes:
+      label: Your ID part (must match the title)
+      placeholder: "12342210"
+    validations:
+      required: true
