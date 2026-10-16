@@ -43,24 +43,22 @@ Rules:
 - Never commit directly to `main`. Never open a PR whose head branch is `main`/`master` - the bot rejects it.
 - One student = one branch = one PR.
 
-### Step 2 - create your folder
+### Step 2 - create your folder + `students.json` line (automatic)
+
+Run this from the repo root - it creates your folder from the template AND appends the exact JSON line:
 
 ```bash
-cp -r students/_template students/<NAME>-<ID>-<YourGithubUsername>
-# Example: cp -r students/_template students/Swarnadip-12342210-Swarnadip-Kar
+python3 students/add-me.py --name YourName --id YourID --github YourGithubUsername
+# Example: python3 students/add-me.py --name Swarnadip --id 12342210 --github Swarnadip-Kar
 ```
 
 Rules:
-- Folder must be exactly `<NAME>-<ID>-<GithubUsername>` - keep your original case (no forced lowercase).
-- NAME = your real name: letters/numbers/`_`, start with letter, NO hyphens. ID = your roll no. / chosen ID: letters/numbers, NO hyphens (keeps the 3-part split unambiguous). Last part = YOUR GitHub username (may contain hyphens).
+- Folder is created as `<NAME>-<ID>-<GithubUsername>` - keep your original case (no forced lowercase).
+- NAME = your real name: letters/numbers/`_`, start with letter, NO hyphens. ID = your roll no. / chosen ID: letters/numbers, NO hyphens. Last part = YOUR GitHub username (may contain hyphens).
 - Example: `Swarnadip-12342210-Swarnadip-Kar` → NAME=`Swarnadip`, ID=`12342210`, GithubUsername=`Swarnadip-Kar`. Keep ID stable forever.
 - Inside your folder: `index.html` is **required** (put your real name in `<h1>`/`<title>`). You may add `style.css` and images (total < 500 KB). Do NOT touch anyone else's folder - the bot checks the username part against YOUR login.
 
-Edit `students/<NAME>-<ID>-<GithubUsername>/index.html` - make it beautiful. See `students/_template/index.html` and `students/Swarnadip-12342210-Swarnadip-Kar/index.html`. Your page is listed on the main hub (`index.html`) automatically from `students.json`.
-
-### Step 3 - add ONE line to `students.json`
-
-Append exactly one JSON object (keep alphabetical order if you can, trailing commas matter):
+Prefer manual? `cp -r students/_template students/<NAME>-<ID>-<YourGithubUsername>` and hand-edit `students.json` - the entry must look exactly like this:
 
 ```json
 [
@@ -74,14 +72,18 @@ Append exactly one JSON object (keep alphabetical order if you can, trailing com
 ]
 ```
 
-Rules:
+Rules for the hand-written line:
 - `folder` MUST equal `<name>-<id>-<github>` exactly (case-sensitive).
 - `page` MUST equal `students/<folder>/index.html`.
 - `github` MUST equal YOUR GitHub username (matches the PR author, case-insensitive).
 - `id` + `folder` + `github` must be unique - no duplicates (same first name is fine; one folder per GitHub account).
 - Only ONE new entry per PR. Do not reformat the whole file.
 
-### Step 4 - commit + push your branch, open PR to `main`
+Forgot the `students.json` line entirely? Open the PR anyway - the bot adds the missing line to your branch itself (keep "Allow edits from maintainers" ticked, it is on by default) and re-checks.
+
+Edit `students/<NAME>-<ID>-<GithubUsername>/index.html` - make it beautiful. See `students/_template/index.html` and `students/Swarnadip-12342210-Swarnadip-Kar/index.html`. Your page is listed on the main hub (`index.html`) automatically from `students.json`.
+
+### Step 3 - commit + push your branch, open PR to `main`
 
 ```bash
 git add students/<NAME>-<ID>-<YourGithubUsername> students.json
@@ -101,7 +103,9 @@ add: <NAME>-<ID>-<GithubUsername>
 
 PR body: write 1 line - your name + what your page has.
 
-### Step 5 - what the bot checks (auto-merge rules)
+### Step 4 - what the bot checks (auto-merge rules)
+
+If your `students.json` line is missing, the bot adds it to your branch first (same format) and re-checks - so the most common mistake fixes itself.
 
 The `validate-and-automerge` Action approves + squash-merges ONLY if ALL pass:
 
