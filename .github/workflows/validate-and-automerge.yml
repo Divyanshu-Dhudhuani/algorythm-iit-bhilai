@@ -28,13 +28,13 @@ jobs:
           echo "base=$BASE_REF head=$HEAD_REF ($HEAD_REPO -> $BASE_REPO) title=$PR_TITLE author=$PR_AUTHOR"
           # 1. base must be main (enforced by trigger, double-check)
           if [ "$BASE_REF" != "main" ]; then
-            MSG="❌ Base branch must be \`main\`. Please retarget your PR to \`main\`."
+            MSG="[FAIL] Base branch must be \`main\`. Please retarget your PR to \`main\`."
             echo "$MSG"; gh pr comment "$PR_NUMBER" --repo "$BASE_REPO" --body "$MSG"
             exit 1
           fi
           # 2. branch-first rule: head must NOT be main/master
           if [ "$HEAD_REF" = "main" ] || [ "$HEAD_REF" = "master" ]; then
-            MSG="❌ **Rejected: you opened this PR from \`$HEAD_REF\`.**
+            MSG="[FAIL] **Rejected: you opened this PR from \`$HEAD_REF\`.**
           You MUST create your own branch first. PRs from \`main\`/\`master\` are never merged.
 
           Fix locally (see README §1):
@@ -51,14 +51,14 @@ jobs:
           fi
           # 3. branch naming: add-/update-<NAME>-<ID>-<GithubUsername>, folder keeps original case
           if ! echo "$HEAD_REF" | grep -Eq '^(add|update)-[A-Za-z][A-Za-z0-9_]*-[A-Za-z0-9]+-[A-Za-z0-9]([A-Za-z0-9-]{0,37}[A-Za-z0-9])?$'; then
-            MSG="❌ **Bad branch name \`$HEAD_REF\`.**
+            MSG="[FAIL] **Bad branch name \`$HEAD_REF\`.**
           Use \`add-<NAME>-<ID>-<YourGithubUsername>\` for new pages or \`update-<NAME>-<ID>-<YourGithubUsername>\` for edits. Example: \`add-Swarnadip-12342210-Swarnadip-Kar\`.
           Your folder must be \`students/<NAME>-<ID>-<GithubUsername>/\` with the SAME case."
             echo "$MSG"; gh pr comment "$PR_NUMBER" --repo "$BASE_REPO" --body "$MSG"
             exit 1
           fi
           if ! echo "$PR_TITLE" | grep -Eq '^(add|update): *[A-Za-z][A-Za-z0-9_]*-[A-Za-z0-9]+-[A-Za-z0-9]([A-Za-z0-9-]{0,37}[A-Za-z0-9])?$'; then
-            MSG="❌ **Bad PR title \`$PR_TITLE\`.**
+            MSG="[FAIL] **Bad PR title \`$PR_TITLE\`.**
           Title must be \`add: <NAME>-<ID>-<GithubUsername>\` (or \`update: …\`). Example: \`add: Swarnadip-12342210-Swarnadip-Kar\`."
             echo "$MSG"; gh pr comment "$PR_NUMBER" --repo "$BASE_REPO" --body "$MSG"
             exit 1
@@ -68,7 +68,7 @@ jobs:
           REST=$(echo "$HEAD_REF" | sed -E 's/^(add|update)-//')
           BRANCH_USER=$(echo "$REST" | cut -d- -f3-)
           if [ "$(echo "$BRANCH_USER" | tr '[:upper:]' '[:lower:]')" != "$(echo "$PR_AUTHOR" | tr '[:upper:]' '[:lower:]')" ]; then
-            MSG="❌ **Ownership violation: branch \`$HEAD_REF\` claims GitHub user \`$BRANCH_USER\`, but this PR was opened by \`@$PR_AUTHOR\`.**
+            MSG="[FAIL] **Ownership violation: branch \`$HEAD_REF\` claims GitHub user \`$BRANCH_USER\`, but this PR was opened by \`@$PR_AUTHOR\`.**
           You may ONLY use the folder/branch carrying YOUR OWN username: \`add-<NAME>-<ID>-$PR_AUTHOR\`.
           (Comparison is case-insensitive, but keep your folder's original case consistent.)"
             echo "$MSG"; gh pr comment "$PR_NUMBER" --repo "$BASE_REPO" --body "$MSG"
@@ -92,7 +92,7 @@ jobs:
             sleep 5
           done
           if echo "$STATE" | grep -qi "CONFLICT"; then
-            gh pr comment "$PR_NUMBER" --repo "$BASE_REPO" --body "❌ **Rejected: this PR has merge conflicts and will NOT be merged.**
+            gh pr comment "$PR_NUMBER" --repo "$BASE_REPO" --body "[FAIL] **Rejected: this PR has merge conflicts and will NOT be merged.**
           Almost always this means someone else edited \`students.json\` before you.
 
           **Resolve locally first, then push** (see README §2 - do NOT just click Resolve on github.com):
@@ -138,7 +138,7 @@ jobs:
           PR_NUMBER: ${{ github.event.pull_request.number }}
           BASE_REPO: ${{ github.event.pull_request.base.repo.full_name }}
         run: |
-          gh pr comment "$PR_NUMBER" --repo "$BASE_REPO" --body "❌ **Content validation failed.** See the failing \`validate\` job log for the exact rule.
+          gh pr comment "$PR_NUMBER" --repo "$BASE_REPO" --body "[FAIL] **Content validation failed.** See the failing \`validate\` job log for the exact rule.
 
           Quick checklist (README §1):
           - Changed files = ONLY YOUR OWN \`students/<NAME>-<ID>-<GithubUsername>/**\` + \`students.json\` (nothing else, never \`students/_template/\`, never someone else's folder)
@@ -155,7 +155,7 @@ jobs:
           PR_NUMBER: ${{ github.event.pull_request.number }}
           BASE_REPO: ${{ github.event.pull_request.base.repo.full_name }}
         run: |
-          gh pr comment "$PR_NUMBER" --repo "$BASE_REPO" --body "✅ **Validation passed.** Auto-merge enabled - GitHub merges this once the required ✅ check completes. Welcome to ALGORYTHM! 🎉 Your page appears after Pages redeploys (~1 min)."
+          gh pr comment "$PR_NUMBER" --repo "$BASE_REPO" --body "[OK] **Validation passed.** Auto-merge enabled - GitHub merges this once the required check completes. Welcome to ALGORYTHM! Your page appears after Pages redeploys (~1 min)."
           # NOTE: --auto (not immediate merge): branch protection requires the
           # `validate` check itself, so an in-run merge is prohibited by policy.
           # --auto queues the squash-merge for right after this run reports success.

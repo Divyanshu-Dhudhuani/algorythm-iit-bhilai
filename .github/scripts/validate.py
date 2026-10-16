@@ -242,7 +242,7 @@ def report(errors):
     if errors:
         print(f"\nVALIDATION FAILED ({len(errors)} error(s)). Fix on the SAME branch and push - see README §1-2.")
         return 1
-    print("\nVALIDATION PASSED ✅")
+    print("\nVALIDATION PASSED")
     return 0
 
 if __name__ == "__main__":

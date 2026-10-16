@@ -105,13 +105,13 @@ PR body: write 1 line - your name + what your page has.
 
 The `validate-and-automerge` Action approves + squash-merges ONLY if ALL pass:
 
-1. ✅ Head branch is NOT `main`/`master` - must be `add-<NAME>-<ID>-<GithubUsername>`, and its username part MUST equal YOUR login (the PR author).
-2. ✅ Base branch is `main`.
-3. ✅ No merge conflicts (`mergeable` = clean). **Conflicting PRs are rejected - see §2.**
-4. ✅ Changed files = ONLY YOUR OWN `students/<NAME>-<ID>-<GithubUsername>/**` + `students.json` (nothing else - never `_template/`, never someone else's folder).
-5. ✅ `students.json` diff = exactly +1 entry, valid JSON, `folder == name-id-github`, `page == students/<folder>/index.html`, `github` == YOUR username, no duplicate id/folder/github-user.
-6. ✅ `students/<NAME>-<ID>-<GithubUsername>/index.html` exists, contains `<html>` + `<h1>`/`<title>` with your real name, < 500 KB, no secrets.
-7. ✅ For **edits** (updating your own bio later): `students.json` may stay untouched, but then you may ONLY touch files inside YOUR OWN already-listed folder. Same branch rule applies (`update-<NAME>-<ID>-<GithubUsername>`).
+1. Head branch is NOT `main`/`master` - must be `add-<NAME>-<ID>-<GithubUsername>`, and its username part MUST equal YOUR login (the PR author).
+2. Base branch is `main`.
+3. No merge conflicts (`mergeable` = clean). **Conflicting PRs are rejected - see §2.**
+4. Changed files = ONLY YOUR OWN `students/<NAME>-<ID>-<GithubUsername>/**` + `students.json` (nothing else - never `_template/`, never someone else's folder).
+5. `students.json` diff = exactly +1 entry, valid JSON, `folder == name-id-github`, `page == students/<folder>/index.html`, `github` == YOUR username, no duplicate id/folder/github-user.
+6. `students/<NAME>-<ID>-<GithubUsername>/index.html` exists, contains `<html>` + `<h1>`/`<title>` with your real name, < 500 KB, no secrets.
+7. For **edits** (updating your own bio later): `students.json` may stay untouched, but then you may ONLY touch files inside YOUR OWN already-listed folder. Same branch rule applies (`update-<NAME>-<ID>-<GithubUsername>`).
 
 If any check fails, the bot posts a comment explaining what to fix. Fix on the SAME branch + push - the PR re-checks automatically. No need to open a new PR.
 
@@ -141,7 +141,7 @@ git rebase --continue   # if you used rebase (or: git commit, if you used merge)
 git push --force-with-lease   # after rebase; plain `git push` after merge
 ```
 
-Then confirm on your PR page: “This branch has no conflicts” + green ✅ checks. The bot will auto-merge from there.
+Then confirm on your PR page: “This branch has no conflicts” + green checks. The bot will auto-merge from there.
 
 > First-timer tip: always `git pull upstream main` / `rebase` **right before** you start Step 1 - most conflicts disappear if you start from fresh `main`.
 
