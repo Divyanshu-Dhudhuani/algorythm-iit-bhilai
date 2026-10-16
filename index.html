@@ -54,21 +54,21 @@ section>h2{font-family:var(--font-display);font-size:22px;letter-spacing:-.01em}
 .hint{color:var(--muted);font-size:14px;margin:6px 0 4px;max-width:78ch}
 .hint code,.howto code{font-family:var(--font-mono);font-size:12.5px;background:var(--surface);padding:2px 7px;border-radius:6px;border:1px solid var(--border)}
 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(310px,1fr));gap:16px;margin-top:16px}
-.card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:20px;transition:transform .15s ease,box-shadow .15s ease}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:20px;display:flex;flex-direction:column;height:100%;transition:transform .15s ease,box-shadow .15s ease}
 .card:hover{transform:translateY(-2px);box-shadow:0 12px 28px -18px oklch(22% 0.02 240 / .45)}
 .card h3{font-family:var(--font-display);font-size:18px;letter-spacing:-.01em;margin:8px 0 4px}
 .chiprow{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
 .chip{font-family:var(--font-mono);font-size:11.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);border:1px solid var(--border);background:var(--bg);border-radius:999px;padding:4px 10px}
 .chip.solid{background:var(--accent);border-color:var(--accent);color:var(--accent-ink);font-weight:700}
 .meta{color:var(--muted);font-size:12.5px;font-family:var(--font-mono);letter-spacing:.06em;margin-bottom:8px}
-.desc{font-size:14.5px;margin-bottom:14px;color:var(--fg)}
-.links{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.desc{font-size:14.5px;margin-bottom:2px;color:var(--fg)}
+.links{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:auto;padding-top:14px}
 .links a{font-size:13.5px;font-weight:600;padding:8px 16px;border-radius:999px;border:1px solid var(--border);background:var(--bg);color:var(--fg);text-decoration:none;font-family:var(--font-display)}
 .links a.open{background:var(--fg);border-color:var(--fg);color:var(--bg)}
 .links a.ghost{background:var(--surface)}
 .links a:hover{filter:brightness(.96)}
 .extras{margin-top:12px;padding-top:10px;border-top:1px dashed var(--border);font-size:13px;color:var(--muted)}
-.extras a{color:var(--link);text-decoration:none;margin-right:12px}
+.extras a{color:var(--link);text-decoration:none;margin-right:12px;white-space:nowrap}
 .extras a:hover{text-decoration:underline}
 /* students */
 .toolbar{display:flex;gap:10px;margin:14px 0 4px;flex-wrap:wrap}
