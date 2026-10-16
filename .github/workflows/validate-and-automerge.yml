@@ -65,23 +65,15 @@ jobs:
           fi
           # 4. ownership: the username part of branch (and folder) must be YOUR OWN login
           # branch = add|update-NAME-ID-user; NAME/ID have no hyphens, user may → strip prefix, user is 3rd+ segment
-          # Bot-provisioned PRs (authored by github-actions[bot] from an `add me:` issue)
-          # carry the STUDENT's username: ownership was enforced at provision time,
-          # so resolve the effective user from the branch and skip the login match.
           REST=$(echo "$HEAD_REF" | sed -E 's/^(add|update)-//')
           BRANCH_USER=$(echo "$REST" | cut -d- -f3-)
-          if [[ "$PR_AUTHOR" == *"[bot]" ]]; then
-            EFFECTIVE_USER="$BRANCH_USER"
-            echo "bot-authored PR: effective user=$EFFECTIVE_USER"
-          elif [ "$(echo "$BRANCH_USER" | tr '[:upper:]' '[:lower:]')" != "$(echo "$PR_AUTHOR" | tr '[:upper:]' '[:lower:]')" ]; then
+          if [ "$(echo "$BRANCH_USER" | tr '[:upper:]' '[:lower:]')" != "$(echo "$PR_AUTHOR" | tr '[:upper:]' '[:lower:]')" ]; then
             MSG="[FAIL] **Ownership violation: branch \`$HEAD_REF\` claims GitHub user \`$BRANCH_USER\`, but this PR was opened by \`@$PR_AUTHOR\`.**
           You may ONLY use the folder/branch carrying YOUR OWN username: \`add-<NAME>-<ID>-$PR_AUTHOR\`.
           (Comparison is case-insensitive, but keep your folder's original case consistent.)"
             echo "$MSG"; gh pr comment "$PR_NUMBER" --repo "$BASE_REPO" --body "$MSG"
             exit 1
           fi
-          if [[ "$PR_AUTHOR" != *"[bot]" ]]; then EFFECTIVE_USER="$PR_AUTHOR"; fi
-          echo "EFFECTIVE_USER=$EFFECTIVE_USER" >> "$GITHUB_ENV"
 
       - name: Merge-conflict check (reject if conflicting)
         env:
@@ -138,7 +130,7 @@ jobs:
           PR_AUTHOR: ${{ github.event.pull_request.user.login }}
           HEAD_REF: ${{ github.event.pull_request.head.ref }}
         run: |
-          python3 .github/scripts/autofix.py --base upstream/main --author "$EFFECTIVE_USER" --branch "$HEAD_REF"
+          python3 .github/scripts/autofix.py --base upstream/main --author "$PR_AUTHOR" --branch "$HEAD_REF"
 
       - name: Note auto-added entry
         if: success() && steps.autofix.outputs.result == 'pushed'
@@ -163,7 +155,7 @@ jobs:
         env:
           PR_AUTHOR: ${{ github.event.pull_request.user.login }}
         run: |
-          python3 .github/scripts/validate.py --base upstream/main --head HEAD --author "$EFFECTIVE_USER"
+          python3 .github/scripts/validate.py --base upstream/main --head HEAD --author "$PR_AUTHOR"
         # on failure, next step comments the log
 
       - name: Comment on content-validation failure
