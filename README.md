@@ -180,6 +180,5 @@ algorythm-iit-bhilai/
     session-02-1-git-recovery/index.html (+ …)
   .github/
     workflows/validate-and-automerge.yml
-    workflows/pages.yml
     scripts/validate.py
 ```
