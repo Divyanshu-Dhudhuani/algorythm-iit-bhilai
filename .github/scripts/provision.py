@@ -78,7 +78,7 @@ def main():
     # light personalization (student fills the rest)
     idx = Path("students") / folder / "index.html"
     t = idx.read_text()
-    t = t.replace("Your Name", name).replace("YourID", sid)
+    t = t.replace("Your Real Name", name).replace("Your Name", name).replace("YourID", sid)
     idx.write_text(t)
 
     branch = f"add-{folder}"

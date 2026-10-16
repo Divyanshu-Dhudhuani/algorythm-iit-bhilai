@@ -12,6 +12,10 @@ Main hub for all ALGORYTHM session slide decks + student bio pages.
 
 ## 1. For students - add your bio page (required workflow)
 
+> Easiest, no terminal: open an issue from the **Add my bio page** form titled `add me: YourName-YourID` - the bot creates your folder, the data line, and your PR automatically. Then edit your page file from the PR link.
+> Prefer terminal? Follow steps 0-3 below instead.
+> Either way: correct PRs auto-merge, and you may ONLY use the folder carrying YOUR OWN GitHub username.
+
 > ⚠️ **You MUST create your own branch first. PRs raised directly from `main` are auto-rejected.**
 > ⚠️ **You may ONLY edit the folder carrying YOUR OWN GitHub username. Touching anyone else's folder = auto-rejected.**
 > ⚠️ **If your PR shows a merge conflict, it will NOT be merged. Resolve it locally first, then push.**
