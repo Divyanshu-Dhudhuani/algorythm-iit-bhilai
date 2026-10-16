@@ -27,11 +27,11 @@ body{background:var(--bg);color:var(--fg);font:17px/1.6 var(--font-body);-webkit
 a{color:var(--link)}
 .wrap{max-width:1080px;margin:0 auto;padding:36px 22px 64px}
 .kicker{font-family:var(--font-mono);font-size:12px;letter-spacing:.22em;text-transform:uppercase;color:var(--muted)}
-header.top{border-bottom:1px solid var(--border);padding-bottom:22px;margin-bottom:8px}
-.brand{display:flex;gap:16px;align-items:center;flex-wrap:wrap}
-.logo{width:52px;height:52px;border-radius:14px;background:var(--fg);color:var(--bg);display:grid;place-items:center;font-family:var(--font-display);font-weight:800;font-size:24px;flex:none}
-h1{font-family:var(--font-display);font-size:clamp(26px,4.4vw,40px);letter-spacing:-.02em;line-height:1.1}
-.sub{color:var(--muted);margin-top:6px;max-width:70ch}
+header.top{border-bottom:1px solid var(--border);padding-bottom:24px;margin-bottom:8px;position:relative}
+header.top::before{content:"";position:absolute;top:-36px;left:0;right:0;height:4px;background:linear-gradient(90deg,var(--accent),var(--link));border-radius:0 0 4px 4px}
+.brand{display:flex;gap:16px;align-items:flex-end;justify-content:space-between;flex-wrap:wrap}
+h1{font-family:var(--font-display);font-size:clamp(30px,5vw,46px);letter-spacing:-.025em;line-height:1.05}
+.sub{color:var(--muted);margin-top:8px;max-width:68ch;font-size:16px}
 .btn-row{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}
 .btn{display:inline-block;padding:9px 18px;border-radius:999px;border:1px solid var(--border);background:var(--surface);color:var(--fg);text-decoration:none;font-weight:600;font-size:14px;font-family:var(--font-display)}
 .btn.primary{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
@@ -93,16 +93,15 @@ footer a{color:var(--link)}
 <div class="wrap">
   <header class="top">
     <div class="kicker">ALGORYTHM · IIT Bhilai · the tech club</div>
-    <div class="brand" style="margin-top:8px">
-      <div class="logo">A</div>
+    <div class="brand" style="margin-top:10px">
       <div>
         <h1>ALGORYTHM Sessions</h1>
         <div class="sub">One repo, all sessions — slide decks + student bio pages. Built live in the sessions, by the sessions.</div>
       </div>
-    </div>
-    <div class="btn-row">
-      <a class="btn primary" href="https://github.com/Swarnadip-Kar/algorythm-iit-bhilai" id="repoLink">★ Star / Fork on GitHub</a>
-      <a class="btn" href="README.md">How to add your page →</a>
+      <div class="btn-row" style="margin-top:0">
+        <a class="btn primary" href="https://github.com/Swarnadip-Kar/algorythm-iit-bhilai" id="repoLink">★ Star / Fork on GitHub</a>
+        <a class="btn" href="README.md">How to add your page →</a>
+      </div>
     </div>
   </header>
 
@@ -218,7 +217,7 @@ async function main(){
     q.addEventListener("input", ()=>render(q.value));
     render();
   }catch(e){
-    document.getElementById("sessions").innerHTML = `<div class="error">Failed to load JSON: ${escapeHtml(e.message)}. If you opened index.html via file://, serve it (e.g. <code>python3 -m http.server</code>) or check GitHub Pages.</div>`;
+    document.getElementById("sessions").innerHTML = `<div class="error">Failed to load JSON: ${escapeHtml(e.message)}. If you opened index.html via file://, serve it (e.g. <code>python3 -m http.server</code>) or open the live site.</div>`;
   }
 }
 function escapeHtml(s){ return String(s??"").replace(/[&<>"']/g, c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c])); }

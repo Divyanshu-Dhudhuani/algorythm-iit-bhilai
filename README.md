@@ -2,7 +2,7 @@
 
 Main hub for all ALGORYTHM session slide decks + student bio pages.
 
-- **Live site:** GitHub Pages serves `index.html` from `main` (root). It reads `students.json` + `sessions.json` and renders the lists — no build step.
+- **Live site:** https://algorythm-iit-bhilai.vercel.app — serves `index.html` from `main` (auto-redeploys on every merge). The page reads `students.json` + `sessions.json` and renders the lists — no build step.
 - **Slide decks:** HTML files under `sessions/<session-id>/`. Linked from `index.html` via `sessions.json`. Since they are plain HTML, they open directly in the browser.
 - **Student pages:** each student owns `students/<NAME>-<ID>-<GithubUsername>/index.html` + **one line** in `students.json`. `index.html` at root reads that JSON and creates the directory of webpages.
 
@@ -155,7 +155,7 @@ Add a session:
 2. Add one object to `sessions.json` (id/title/date/description/deck/files).
 3. Push to `main` — `index.html` picks it up automatically. No rebuild.
 
-GitHub Pages: Settings → Pages → Deploy from branch `main` / root (already configured via `.github/workflows/pages.yml` as backup). Site URL is shown in the workflow + repo About section.
+Hosting: the live site is the Vercel project linked to this repo (auto-deploys `main` on every push/merge). GitHub Pages stays OFF on this repo — the shared `*.github.io` host is flagged by Safe Browsing because of an unrelated demo project, so all student links must use the `vercel.app` URL.
 
 Branch protection (active): `main` requires the `validate` check + PR before merging (strict off so queued auto-merges complete). Admins can still push session decks directly. Auto-merge bot has `contents:write + pull-requests:write` and squash-merges compliant PRs.
 
