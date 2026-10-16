@@ -1,10 +1,11 @@
 name: pages
 
-# NOTE: GitHub Pages is currently OFF on this repo (the shared *.github.io host
-# is Safe-Browsing flagged because of an unrelated demo project). Live host is
-# Vercel (auto-deploys main). This workflow is kept manual-only so it never
-# runs (and fails) on push — run it by hand only if Pages is ever re-enabled.
+# NOTE: GitHub Pages is ON as a backup host. Live primary host is Vercel
+# (the shared *.github.io host carries a Safe-Browsing flag from an unrelated
+# demo project, so share only the vercel.app link with students).
 on:
+  push:
+    branches: [main]
   workflow_dispatch:
 
 permissions:

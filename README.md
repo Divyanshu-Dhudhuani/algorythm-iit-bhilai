@@ -155,7 +155,7 @@ Add a session:
 2. Add one object to `sessions.json` (id/title/date/description/deck/files).
 3. Push to `main` — `index.html` picks it up automatically. No rebuild.
 
-Hosting: the live site is the Vercel project linked to this repo (auto-deploys `main` on every push/merge). GitHub Pages stays OFF on this repo — the shared `*.github.io` host is flagged by Safe Browsing because of an unrelated demo project, so all student links must use the `vercel.app` URL.
+Hosting: primary live site is the Vercel project linked to this repo (auto-deploys `main`). GitHub Pages is also ON as a backup deploy of the same `main` — but share only the `vercel.app` link, since the shared `*.github.io` host shows a browser warning (flagged because of an unrelated demo project).
 
 Branch protection (active): `main` requires the `validate` check + PR before merging (strict off so queued auto-merges complete). Admins can still push session decks directly. Auto-merge bot has `contents:write + pull-requests:write` and squash-merges compliant PRs.
 
@@ -180,6 +180,6 @@ algorythm-iit-bhilai/
     session-02-1-git-recovery/index.html (+ …)
   .github/
     workflows/validate-and-automerge.yml
-    workflows/pages.yml (manual-only; Pages off, Vercel is live)
+    workflows/pages.yml (backup host deploy)
     scripts/validate.py
 ```
