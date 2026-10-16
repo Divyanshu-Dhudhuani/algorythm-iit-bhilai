@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>ALGORYTHM Sessions — IIT Bhilai</title>
+<title>ALGORYTHM Sessions - IIT Bhilai</title>
 <meta name="description" content="Main hub for ALGORYTHM session slide decks + student bio pages. Students submit via PR." />
 <style>
 /* Design language copied from Session 1 deck (sessions/session-01-intro-explore/index.html) */
@@ -96,7 +96,7 @@ footer a{color:var(--link)}
     <div class="brand" style="margin-top:10px">
       <div>
         <h1>ALGORYTHM Sessions</h1>
-        <div class="sub">One repo, all sessions — slide decks + student bio pages. Built live in the sessions, by the sessions.</div>
+        <div class="sub">One repo, all sessions: slide decks + student bio pages. Built live in the sessions, by the sessions.</div>
       </div>
       <div class="btn-row" style="margin-top:0">
         <a class="btn primary" href="https://github.com/Swarnadip-Kar/algorythm-iit-bhilai" id="repoLink">★ Star / Fork on GitHub</a>
@@ -107,7 +107,7 @@ footer a{color:var(--link)}
 
   <section id="sessions-sec">
     <div class="sec-head"><span class="sec-num">01</span><h2>Session slide decks</h2></div>
-    <p class="hint">Every part of the series lives here — git, agents, CTFs, demos and more. HTML decks open directly, no download needed. New sessions get appended to <code>sessions.json</code>.</p>
+    <p class="hint">Every part of the series lives here: git, agents, CTFs, demos and more. HTML decks open directly, no download needed. New sessions get appended to <code>sessions.json</code>.</p>
     <div class="grid" id="sessions"></div>
   </section>
 
@@ -127,7 +127,7 @@ footer a{color:var(--link)}
         <li>Edit your <code>index.html</code></li>
         <li>Add one line to <code>students.json</code> and open a PR from your own branch</li>
       </ol>
-      Full steps in <a href="README.md">README</a>. PRs that follow the format are auto-merged 🤖.
+      Full steps in <a href="README.md">README</a>. PRs that follow the format are auto-merged by the bot.
     </div>
   </section>
 
@@ -135,11 +135,11 @@ footer a{color:var(--link)}
     <img class="avatar-lg" src="https://github.com/Swarnadip-Kar.png?size=176" alt="Swarnadip's GitHub avatar" loading="lazy" onerror="this.style.display='none'" />
     <div>
       <div class="kicker">Maintainer</div>
-      <h2>Swarnadip — DUGC Representative, CSE, IIT Bhilai</h2>
-      <div class="role">Runs ALGORYTHM sessions · all parts, not just git</div>
-      <p><b>Why ALGORYTHM?</b> Seniors and juniors exploring tech together — weekly sessions, small homework, CTFs, showcases. Mission: <b>increase tech culture</b>. No session makes you a master; each one is <b>map + proof + first step + game</b>.</p>
-      <p>Why bother? <b>Leverage</b> — build once, used by thousands (our attendance app, tapped within days). <b>Optionality</b> — GSoC, internships, research, startups: proof beats marks. <b>Fun</b> — your phone becomes a MIDI looper for ₹0. And the rule for the AI era: <b>use AI — but be good enough to catch it when it's wrong</b>.</p>
-      <p>So: come with your laptop, leave with a page on this hub. Best bio pages go on stage next session. 🔥</p>
+      <h2>Swarnadip, DUGC Representative, CSE, IIT Bhilai</h2>
+      <div class="role">Just someone motivated to help :)</div>
+      <p><b>Why ALGORYTHM?</b> Seniors and juniors exploring tech together: weekly sessions, small homework, CTFs, showcases. Mission: <b>increase tech culture</b>. No session makes you a master; each one is <b>map + proof + first step + game</b>.</p>
+      <p>Why bother? <b>Leverage</b>: build once, used by thousands (our attendance app, tapped within days). <b>Optionality</b>: GSoC, internships, research, startups. Proof beats marks. <b>Fun</b>: your phone becomes a MIDI looper for ₹0. And the rule for the AI era: <b>use AI, but be good enough to catch it when it's wrong</b>.</p>
+      <p>So: come with your laptop, leave with a page on this hub. Best bio pages go on stage next session.</p>
       <div class="mission">
         <span class="pill"><b>01 / MAP</b> · why tech + where to look</span>
         <span class="pill"><b>02 / PROOF</b> · what students like you built</span>
@@ -165,8 +165,8 @@ async function main(){
   try{
     const [sessions, students] = await Promise.all([loadJSON("sessions.json"), loadJSON("students.json")]);
 
-    // One deck link per session ("Open deck" == deck). Extra files listed separately —
-    // there is no difference between the old "Main deck" and "Open deck" buttons; deduped.
+    // "Open deck" is the deck link. Extra files render separately below it.
+    // "Open deck" is the deck link. Extra files render separately below it.
     const sWrap = document.getElementById("sessions");
     sWrap.innerHTML = "";
     sessions.forEach((s,i)=>{

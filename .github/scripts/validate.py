@@ -59,7 +59,7 @@ def fail(msg):
 def split_folder(folder):
     """Split <NAME>-<ID>-<user> into parts.
 
-    NAME and ID contain no hyphens, but GitHub usernames MAY — so the
+    NAME and ID contain no hyphens, but GitHub usernames MAY - so the
     username is everything after the SECOND hyphen.
     """
     parts = folder.split("-")
@@ -152,7 +152,7 @@ def main():
         if len(added) != 1 or removed:
             errors.append(fail(
                 f"students.json must add EXACTLY one entry (found +{len(added)}/-{len(removed)}). "
-                "Do not edit or reformat other lines — resolve conflicts by keeping both entries."))
+                "Do not edit or reformat other lines - resolve conflicts by keeping both entries."))
             return report(errors)
         entry = added[0]
         for k in ("name", "id", "folder", "page", "github"):
@@ -185,7 +185,7 @@ def main():
             elif parts and parts[2].lower() != author.lower():
                 errors.append(fail(
                     f"Ownership violation: folder username `{parts[2]}` != PR author `{author}`."))
-        # duplicates in head (same first name is fine — folder/id/github must be unique)
+        # duplicates in head (same first name is fine - folder/id/github must be unique)
         ids = [e.get("id") for e in head_list]
         folders_l = [e.get("folder") for e in head_list]
         ghs = [(e.get("github") or "").lower() for e in head_list]
@@ -197,7 +197,7 @@ def main():
             errors.append(fail(f"Changed folder `{folders}` does not match students.json entry folder `{folder}`. They must match."))
         target_folder = folder
     else:
-        # owner-update mode: no json change, exactly ONE pre-existing folder — and it must be yours
+        # owner-update mode: no json change, exactly ONE pre-existing folder - and it must be yours
         if len(folders) != 1:
             errors.append(fail("Without students.json change you must edit exactly ONE student folder (your own)."))
             return report(errors)
@@ -240,7 +240,7 @@ def main():
 
 def report(errors):
     if errors:
-        print(f"\nVALIDATION FAILED ({len(errors)} error(s)). Fix on the SAME branch and push — see README §1–2.")
+        print(f"\nVALIDATION FAILED ({len(errors)} error(s)). Fix on the SAME branch and push - see README §1-2.")
         return 1
     print("\nVALIDATION PASSED ✅")
     return 0
