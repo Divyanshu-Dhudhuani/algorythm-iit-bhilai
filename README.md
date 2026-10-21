@@ -12,12 +12,12 @@ Main hub for all ALGORYTHM session slide decks + student bio pages.
 
 ## 1. For students - add your bio page (required workflow)
 
-> You may ONLY use the folder carrying YOUR OWN GitHub username. Touching anyone else's folder = auto-rejected.
-> Forgot the `students.json` line? Open the PR anyway - the bot adds the missing line to your branch itself (keep "Allow edits from maintainers" ticked, it is on by default) and re-checks.
-
 > ⚠️ **You MUST create your own branch first. PRs raised directly from `main` are auto-rejected.**
 > ⚠️ **You may ONLY edit the folder carrying YOUR OWN GitHub username. Touching anyone else's folder = auto-rejected.**
+> ⛔ **NEVER edit `.github/` workflows or scripts, `index.html`, `sessions/`, or README.md.** Student PRs must touch ONLY your own folder (`students/<NAME>-<ID>-<GithubUsername>/**`) and optionally `students.json`. If you touch any other file, the bot will automatically reject your PR.
+> ⚠️ **Do NOT use `git add .` or `git add -A`.** Always stage specifically: `git add students/<NAME>-<ID>-<YourGithubUsername> students.json`.
 > ⚠️ **If your PR shows a merge conflict, it will NOT be merged. Resolve it locally first, then push.**
+> Forgot the `students.json` line? Open the PR anyway - the bot adds the missing line to your branch itself (keep "Allow edits from maintainers" ticked, it is on by default) and re-checks.
 
 ### Step 0 - one-time setup
 
@@ -88,9 +88,11 @@ Edit `students/<NAME>-<ID>-<GithubUsername>/index.html` - make it beautiful. See
 
 ### Step 3 - commit + push your branch, open PR to `main`
 
+> ⚠️ **Important:** Do NOT run `git add .` or `git add -A`. That will accidentally stage unrelated files (like root `index.html`, workflow files, or `.DS_Store`), which will fail CI validation. Explicitly add only your files:
+
 ```bash
 git add students/<NAME>-<ID>-<YourGithubUsername> students.json
-git status   # MUST show only your folder + students.json
+git status   # MUST show ONLY your folder + students.json (no .github/, no index.html)
 git commit -m "add: <NAME>-<ID>-<YourGithubUsername> bio page"
 git push -u origin add-<NAME>-<ID>-<YourGithubUsername>
 ```
@@ -115,7 +117,7 @@ The `validate-and-automerge` Action approves + squash-merges ONLY if ALL pass:
 1. Head branch is NOT `main`/`master` - must be `add-<NAME>-<ID>-<GithubUsername>`, and its username part MUST equal YOUR login (the PR author).
 2. Base branch is `main`.
 3. No merge conflicts (`mergeable` = clean). **Conflicting PRs are rejected - see §2.**
-4. Changed files = ONLY YOUR OWN `students/<NAME>-<ID>-<GithubUsername>/**` + `students.json` (nothing else - never `_template/`, never someone else's folder).
+4. Changed files = ONLY YOUR OWN `students/<NAME>-<ID>-<GithubUsername>/**` + `students.json` (nothing else - never `.github/` workflows/scripts, never `_template/`, never `index.html`, never someone else's folder).
 5. `students.json` diff = exactly +1 entry, valid JSON, `folder == name-id-github`, `page == students/<folder>/index.html`, `github` == YOUR username, no duplicate id/folder/github-user.
 6. `students/<NAME>-<ID>-<GithubUsername>/index.html` exists, contains `<html>` + `<h1>`/`<title>` with your real name, < 500 KB, no secrets.
 7. For **edits** (updating your own bio later): `students.json` may stay untouched, but then you may ONLY touch files inside YOUR OWN already-listed folder. Same branch rule applies (`update-<NAME>-<ID>-<GithubUsername>`).
